@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio Code
+.vscode/**
+
+# Temporary directories
+build/**
+lib/**
+
+# Link to compiled executables
+Beta-reduction_cli
+Beta-reduction_test
+
+# logs
+*.log
