@@ -1,21 +1,27 @@
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
-namespace config
-{
+namespace config {
 
 class Names {
 private:
-    bool static ascii_mode_;
+    bool ascii_mode_;
+
+    Names() {}
 
 public:
-    static void Init(bool ascii_mode) {
+    static Names& Instance() {
+        static Names instance;
+        return instance;
+    }
+
+    void SetASCIIMode(bool ascii_mode) {
         ascii_mode_ = ascii_mode;
     }
 
-    static std::string Alpha() {
+    std::string Alpha() {
         if (ascii_mode_) {
             return "Alpha";
         } else {
@@ -23,7 +29,7 @@ public:
         }
     }
 
-    static std::string Beta() {
+    std::string Beta() {
         if (ascii_mode_) {
             return "Beta";
         } else {
@@ -31,7 +37,7 @@ public:
         }
     }
 
-    static std::string Lambda() {
+    std::string Lambda() {
         if (ascii_mode_) {
             return "L";
         } else {
