@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 
 #include "model/application.h"
 #include "model/term.h"
@@ -26,6 +27,26 @@ public:
         return !(*this == other);
     }
 };
+
+// This operator is very useful in logging:
+inline std::ostream& operator<<(std::ostream& os, TermInfo const& ti) {
+    os << '[';
+
+    if (ti.term == nullptr) {
+        os << "Empty TermInfo";
+    } else {
+        os << ti.term->ToString();
+
+        if (ti.parent == nullptr) {
+            os << " without parent";
+        } else {
+            os << " in " << (ti.in_lhs ? "lhs " : "rhs ") << "of " << ti.parent;
+        }
+    }
+
+    os << ']';
+    return os;
+}
 
 }  // namespace model::strategy
 
