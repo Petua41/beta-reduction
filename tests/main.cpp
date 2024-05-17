@@ -3,6 +3,8 @@
 
 #include <gtest/gtest.h>
 
+#include "config/names.h"
+
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char** argv) {
@@ -12,6 +14,9 @@ int main(int argc, char** argv) {
     } else {
         el::Loggers::configureFromGlobal("logging.conf");
     }
+
+    // It's easier to compare strings in ASCII mode in tests:
+    config::Names::Instance().SetASCIIMode(true);
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
