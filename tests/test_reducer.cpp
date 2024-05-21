@@ -4,6 +4,7 @@
 #include "model/enums/reduction_strategies.h"
 #include "model/reduction_result.h"
 #include "model/terms.h"
+#include "sample_terms.h"
 #include "strategy/reducer.h"
 
 namespace tests {
@@ -11,6 +12,7 @@ namespace tests {
 using namespace model;
 using namespace model::term;
 using namespace model::strategy;
+using namespace test::sample_terms;
 
 struct ReducerTestParams {
     std::shared_ptr<Term> initial_term;
@@ -43,18 +45,16 @@ TEST_P(TestReducer, DefaultTests) {
     EXPECT_EQ(actual_result, sample_result);
 }
 
-// clang-format off
-auto const simple_application = std::make_shared<Application>(
-    std::make_shared<Abstraction>(
-        Variable{"x"},
-        std::make_shared<Variable>("x")),
-    std::make_shared<Variable>("y"));
-ReductionResult const simple_application_result{"y", ReductionExitStatus::NormalForm};
+ReductionResult const simple_redex_result{"y", ReductionExitStatus::NormalForm};
+ReductionResult const addition_result{"(Lf.(Lx.(f (f (f (f x))))))",
+                                      ReductionExitStatus::NormalForm};
 
+// clang-format off
 INSTANTIATE_TEST_SUITE_P(
     ReducerNormalOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(simple_application, simple_application_result)
+        ReducerTestParams(kSimpleRedex, simple_redex_result),
+        ReducerTestParams(k2Plus2, addition_result)
     ));
 // clang-format on
 

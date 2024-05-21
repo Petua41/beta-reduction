@@ -4,10 +4,12 @@
 
 #include "model/terms.h"
 #include "parser/parser.h"
+#include "sample_terms.h"
 
 namespace tests {
 
 using namespace model::term;
+using namespace test::sample_terms;
 
 struct ParserTestParams {
     std::string input_;
@@ -15,6 +17,9 @@ struct ParserTestParams {
 
     ParserTestParams(std::string const& input, std::shared_ptr<Term>&& sample_term)
         : input_(input), sample_term_(std::move(sample_term)) {}
+
+    ParserTestParams(std::string const& input, std::shared_ptr<Term> const& sample_term)
+        : input_(input), sample_term_(sample_term) {}
 };
 
 class TestParser : public ::testing::TestWithParam<ParserTestParams> {};
@@ -33,41 +38,6 @@ TEST_P(TestParser, DefaultTests) {
 }
 
 // clang-format off
-auto const simple_abstraction = std::make_shared<Abstraction>(
-        Variable("x"),
-		std::make_shared<Variable>("x"));
-
-auto const simple_application = std::make_shared<Application>(
-        std::make_shared<Variable>("x"),
-		std::make_shared<Variable>("x"));
-
-auto const church_2 = std::make_shared<Abstraction>(
-	Variable("f"),
-	std::make_shared<Abstraction>(
-		Variable("x"),
-		std::make_shared<Application>(
-			std::make_shared<Variable>("f"),
-			std::make_shared<Application>(
-				std::make_shared<Variable>("f"),
-				std::make_shared<Variable>("x")))));
-
-auto const fixpoint_comb = std::make_shared<Abstraction>(
-	Variable("f"),
-	std::make_shared<Application>(
-		std::make_shared<Abstraction>(
-			Variable("x"),
-			std::make_shared<Application>(
-				std::make_shared<Variable>("f"),
-				std::make_shared<Application>(
-					std::make_shared<Variable>("x"),
-					std::make_shared<Variable>("x")))),
-		std::make_shared<Abstraction>(
-			Variable("x"),
-			std::make_shared<Application>(
-				std::make_shared<Variable>("f"),
-				std::make_shared<Application>(
-					std::make_shared<Variable>("x"),
-					std::make_shared<Variable>("x"))))));
 
 INSTANTIATE_TEST_SUITE_P(
     ParserSimpleTermsTests, TestParser,
@@ -79,19 +49,19 @@ INSTANTIATE_TEST_SUITE_P(
 // Unicode input isn't currently supported:
 #if 0
         // Abstraction (Unicode):
-        ParserTestParams("(λx.x)", simple_abstraction),
+        ParserTestParams("(λx.x)", kSimpleAbstraction),
 #endif
         // Abstraction (ASCII):
-        ParserTestParams("(Lx.x)", simple_abstraction),
+        ParserTestParams("(Lx.x)", kSimpleAbstraction),
         // Application:
-        ParserTestParams("(x x)", simple_application)
+        ParserTestParams("(x x)", kSimpleApplication)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
 	ParserComplexTermsTests, TestParser,
 	::testing::Values(
-		ParserTestParams("(Lf.(Lx.(f (f x))))", church_2),
-		ParserTestParams("(Lf.((Lx.(f (x x))) (Lx.(f (x x)))))", fixpoint_comb)
+		ParserTestParams("(Lf.(Lx.(f (f x))))", kChurch2),
+		ParserTestParams("(Lf.((Lx.(f (x x))) (Lx.(f (x x)))))", kFixpointCombinator)
 	));
 // clang-format on
 
