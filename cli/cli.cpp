@@ -32,10 +32,11 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
         if (read_max_op) {
             try {
                 max_operations_ = std::stoul(arg);
-            }
-            catch(const std::invalid_argument& e) {
+            } catch (std::invalid_argument const& e) {
                 std::cout << "Max operations number must be a positive integer";
             }
+        } else if (arg == "-h" || arg == "--help") {
+            PrintHelpAndExit();
         } else if (arg == "-a" || arg == "--ascii_mode") {
             ascii_mode_ = true;
         } else if (arg == "-m" || arg == "--max_operations") {
@@ -43,15 +44,13 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
         } else if (arg.starts_with("-m")) {
             try {
                 max_operations_ = std::stoul(arg.substr(2));
-            }
-            catch(const std::invalid_argument& e) {
+            } catch (std::invalid_argument const& e) {
                 std::cout << "Max operations number must be a positive integer";
             }
         } else if (arg.starts_with("--max_operations")) {
             try {
                 max_operations_ = std::stoul(arg.substr(16));
-            }
-            catch(const std::invalid_argument& e) {
+            } catch (std::invalid_argument const& e) {
                 std::cout << "Max operations number must be a positive integer";
             }
         } else if (arg == "-r" || arg == "--raw") {
