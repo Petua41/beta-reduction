@@ -18,5 +18,7 @@ constexpr static char kFalseTerm[] = "(Lx.(Ly.y))";
 namespace preprocessor::terms {
 
 using FixpointCombinator = FixedStringKnownTerm<kY, kFixpointComb>;
+using True = FixedStringKnownTerm<kTrue, kTrueTerm>;
+using False = FixedStringKnownTerm<kFalse, kFalseTerm>;
 
 }  // namespace preprocessor::terms

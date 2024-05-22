@@ -48,14 +48,18 @@ INSTANTIATE_TEST_SUITE_P(
     PreprocessorBracketsTests, TestPreprocessor,
     ::testing::Values(
         // Missing outermost brackets:
-        PreprocessorTestParams("Lx.(x x)", "(Lx.(x x))", true, false, true)
+        PreprocessorTestParams("Lx.(x x)", "(Lx.(x x))", true, false)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     PreprocessorFixedStringMacrosTests, TestPreprocessor,
     ::testing::Values(
         // Fixpoint combinator:
-        PreprocessorTestParams("(Y R)", "((Lf.((Lx.(f(x x)))) (Lx.(f(x x)))))) R)", false, true)
+        PreprocessorTestParams("(Y R)", "((Lf.((Lx.(f(x x)))) (Lx.(f(x x)))))) R)", false),
+        // True:
+        PreprocessorTestParams("(Lz.true)", "(Lz.(Lx.(Ly.x)))", false),
+        // False:
+        PreprocessorTestParams("(false A)", "((Lx.(Ly.y)) A)", false)
     ));
 
 // clang-format on
