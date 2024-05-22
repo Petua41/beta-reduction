@@ -78,6 +78,22 @@ auto const k2Plus2 = std::make_shared<Application>(
         kPlus,
         kChurch2),
     kChurch2);
+
+auto const kLoopsOnAppl = std::make_shared<Abstraction>(
+    Variable{"x"},
+    std::make_shared<Application>(
+        std::make_shared<Variable>("y"),
+        std::make_shared<Application>(
+            std::make_shared<Abstraction>(
+                Variable{"z"},
+                std::make_shared<Application>(
+                    std::make_shared<Variable>("z"),
+                    std::make_shared<Variable>("z"))),
+            std::make_shared<Abstraction>(
+                Variable{"z"},
+                std::make_shared<Application>(
+                    std::make_shared<Variable>("z"),
+                    std::make_shared<Variable>("z"))))));
 // clang-format off
 
 }  // namespace test::sample_terms

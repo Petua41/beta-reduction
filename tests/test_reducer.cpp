@@ -48,6 +48,8 @@ TEST_P(TestReducer, DefaultTests) {
 ReductionResult const simple_redex_result{"y", ReductionExitStatus::NormalForm};
 ReductionResult const addition_result{"(Lf.(Lx.(f (f (f (f x))))))",
                                       ReductionExitStatus::NormalForm};
+ReductionResult const appl_loop_result{"(Lx.(y ((Lz.(z z)) (Lz.(z z)))))",
+                                       ReductionExitStatus::Loop};
 
 // clang-format off
 INSTANTIATE_TEST_SUITE_P(
@@ -55,6 +57,14 @@ INSTANTIATE_TEST_SUITE_P(
     ::testing::Values(
         ReducerTestParams(kSimpleRedex, simple_redex_result),
         ReducerTestParams(k2Plus2, addition_result)
+    ));
+
+INSTANTIATE_TEST_SUITE_P(
+    ReducerApplicativeOrderTests, TestReducer,
+    ::testing::Values(
+        ReducerTestParams(kSimpleRedex, simple_redex_result),
+        // Applicative order should reduce Fixpoint Combinator into itself:
+        ReducerTestParams(kLoopsOnAppl, appl_loop_result, ReductionStrategies::APPL)
     ));
 // clang-format on
 
