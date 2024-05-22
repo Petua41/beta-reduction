@@ -26,6 +26,8 @@ public:
             case model::ReductionStrategies::NO:
                 strategy_ = std::make_unique<NOStrategy>(std::move(root));
                 break;
+            case model::ReductionStrategies::APPL:
+                strategy_ = std::make_unique<APPLStrategy>(std::move(root));
             default:
                 break;
         }
