@@ -28,6 +28,10 @@ public:
                 break;
             case model::ReductionStrategies::APPL:
                 strategy_ = std::make_unique<APPLStrategy>(std::move(root));
+                break;
+            case model::ReductionStrategies::CBV:
+                strategy_ = std::make_unique<CBVStrategy>(std::move(root));
+                break;
             default:
                 break;
         }
