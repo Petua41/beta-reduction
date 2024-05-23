@@ -1,6 +1,6 @@
 #pragma once
 
-#include "preprocessor/known_terms/fixed_string_known_term.h"
+#include "preprocessor/macros/fixed_string_macro.h"
 
 namespace {
 
@@ -17,8 +17,8 @@ constexpr static char kFalseTerm[] = "(Lx.(Ly.y))";
 
 namespace preprocessor::terms {
 
-using FixpointCombinator = FixedStringKnownTerm<kY, kFixpointComb>;
-using True = FixedStringKnownTerm<kTrue, kTrueTerm>;
-using False = FixedStringKnownTerm<kFalse, kFalseTerm>;
+using FixpointCombinator = FixedStringMacro<kY, kFixpointComb>;
+using True = FixedStringMacro<kTrue, kTrueTerm>;
+using False = FixedStringMacro<kFalse, kFalseTerm>;
 
 }  // namespace preprocessor::terms

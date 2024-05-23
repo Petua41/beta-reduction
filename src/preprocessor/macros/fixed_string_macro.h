@@ -2,18 +2,18 @@
 
 #include <string>
 
-#include "preprocessor/i_known_term.h"
+#include "preprocessor/i_macro.h"
 
 namespace preprocessor::terms {
 
 template <char const* Name, char const* Term>
-class FixedStringKnownTerm : public IKnownTerm {
+class FixedStringMacro : public IMacro {
 private:
     std::string name_;
     std::string term_;
 
 public:
-    FixedStringKnownTerm() : name_(Name), term_(Term) {}
+    FixedStringMacro() : name_(Name), term_(Term) {}
 
     bool IsPresent(std::string const& str) const override {
         return str.find(name_) != std::string::npos;

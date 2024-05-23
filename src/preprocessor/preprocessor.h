@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "preprocessor/all_known_terms.h"
-
 namespace preprocessor {
 
 class Preprocessor {
@@ -19,9 +17,13 @@ private:
     bool CheckBrackets() {
         // TODO(senichenkov): implement Preprocessor::CheckBrackets
 
+        // FIXME(senichenkov): outermost brackets check should be smarter
         // Check outermost brackets:
         if (!input_.starts_with('(') || !input_.ends_with(')')) {
-            input_ = '(' + input_ + ')';
+            // Input contains Abstractions and Applications:
+            if (input_.find(' ') != std::string::npos || input_.find('.') != std::string::npos) {
+                input_ = '(' + input_ + ')';
+            }
         }
 
         // Check if brackets match:

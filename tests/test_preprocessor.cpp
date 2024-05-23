@@ -62,6 +62,21 @@ INSTANTIATE_TEST_SUITE_P(
         PreprocessorTestParams("(false A)", "((Lx.(Ly.y)) A)", false)
     ));
 
+INSTANTIATE_TEST_SUITE_P(
+    PreprocessorChurchNumeralsTests, TestPreprocessor,
+    ::testing::Values(
+        // Check that zero is replaced correctly:
+        PreprocessorTestParams("(0 x)", "((Lf.(Lx.x)) x)", false),
+        // Check basic case -- one numeral from [1, 9]:
+        PreprocessorTestParams("(Lx.2)", "(Lx.(Lf.(Lx.(f (f x)))))", false),
+        // Check multiple different numerals in single term:
+        PreprocessorTestParams("(3 1)", "((Lf.(Lx.(f (f (f x))))) (Lf.(Lx.(f x))))", false),
+        // Check multiple similar numerals in single term:
+        PreprocessorTestParams("(Lz.(4 4))", "(Lz.((Lf.(Lx.(f (f (f (f x)))))) (Lf.(Lx.(f (f (f (f x))))))))"),
+        // Check multi-digit numeral:
+        PreprocessorTestParams("10", "(Lf.(Lx.(f (f (f (f (f (f (f (f (f (f x))))))))))))")
+    ));
+
 // clang-format on
 
 }  // namespace test
