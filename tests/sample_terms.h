@@ -94,6 +94,14 @@ auto const kLoopsOnAppl = std::make_shared<Abstraction>(
                 std::make_shared<Application>(
                     std::make_shared<Variable>("z"),
                     std::make_shared<Variable>("z"))))));
+
+auto const kWeakNormalForm = std::make_shared<Abstraction>(
+    Variable{"x"},
+    std::make_shared<Application>(
+        std::make_shared<Abstraction>(
+            Variable{"y"},
+            std::make_shared<Variable>("y")),
+        std::make_shared<Variable>("x")));
 // clang-format off
 
 }  // namespace test::sample_terms

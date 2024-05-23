@@ -50,6 +50,7 @@ ReductionResult const addition_result{"(Lf.(Lx.(f (f (f (f x))))))",
                                       ReductionExitStatus::NormalForm};
 ReductionResult const appl_loop_result{"(Lx.(y ((Lz.(z z)) (Lz.(z z)))))",
                                        ReductionExitStatus::Loop};
+ReductionResult const weak_normal_form_result{"(Lx.((Ly.y) x))", ReductionExitStatus::NormalForm};
 
 // clang-format off
 INSTANTIATE_TEST_SUITE_P(
@@ -62,9 +63,17 @@ INSTANTIATE_TEST_SUITE_P(
 INSTANTIATE_TEST_SUITE_P(
     ReducerApplicativeOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, simple_redex_result),
+        ReducerTestParams(kSimpleRedex, simple_redex_result, ReductionStrategies::APPL),
         // Applicative order should reduce Fixpoint Combinator into itself:
         ReducerTestParams(kLoopsOnAppl, appl_loop_result, ReductionStrategies::APPL)
+    ));
+
+INSTANTIATE_TEST_SUITE_P(
+    ReducerCBVTests, TestReducer,
+    ::testing::Values(
+        ReducerTestParams(kSimpleRedex, simple_redex_result, ReductionStrategies::CBV),
+        // CBV shouldn't reduce kWeakNormalForm:
+        ReducerTestParams(kWeakNormalForm, weak_normal_form_result, ReductionStrategies::CBV)
     ));
 // clang-format on
 
