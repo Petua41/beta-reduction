@@ -13,5 +13,9 @@ std::shared_ptr<model::term::Term> DFSFind(
 model::strategy::TermInfo DFSFindTermInfo(
         std::shared_ptr<model::term::Term> root,
         std::function<bool(std::shared_ptr<model::term::Term>)> pred);
+model::strategy::TermInfo DFSFindTermInfoSkipChildren(
+        std::shared_ptr<model::term::Term> root,
+        std::function<bool(std::shared_ptr<model::term::Term>)> pred,
+        std::function<bool(std::shared_ptr<model::term::Term>)> skip_if);
 
 }  // namespace util::algorithm

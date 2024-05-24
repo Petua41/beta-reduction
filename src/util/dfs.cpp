@@ -51,6 +51,15 @@ std::shared_ptr<Term> DFSFind(std::shared_ptr<Term> root,
 
 TermInfo DFSFindTermInfo(std::shared_ptr<Term> root,
                          std::function<bool(std::shared_ptr<Term>)> pred) {
+    return DFSFindTermInfoSkipChildren(
+            std::move(root), std::move(pred),
+            [](auto param __attribute__((__unused__))) { return false; });
+}
+
+model::strategy::TermInfo DFSFindTermInfoSkipChildren(
+        std::shared_ptr<model::term::Term> root,
+        std::function<bool(std::shared_ptr<model::term::Term>)> pred,
+        std::function<bool(std::shared_ptr<model::term::Term>)> skip_if) {
     TermInfo root_term_info{std::move(root), nullptr, true};
 
     if (pred(root)) {
@@ -71,6 +80,11 @@ TermInfo DFSFindTermInfo(std::shared_ptr<Term> root,
 
         if (pred(current.term)) {
             return current;
+        }
+
+        // Skip current's children if predicate is true:
+        if (skip_if(current.term)) {
+            continue;
         }
 
         auto abstr = dynamic_cast<Abstraction*>(current.term.get());
