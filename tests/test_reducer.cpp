@@ -18,12 +18,15 @@ struct ReducerTestParams {
     std::shared_ptr<Term> initial_term;
     ReductionResult sample_result;
     ReductionStrategies strat;
+    unsigned max_operations;
 
     ReducerTestParams(std::shared_ptr<Term>&& initial_term, ReductionResult&& sample_result,
-                      ReductionStrategies strat = ReductionStrategies::NO)
+                      ReductionStrategies strat = ReductionStrategies::NO,
+                      unsigned max_operations = 0)
         : initial_term(std::move(initial_term)),
           sample_result(std::move(sample_result)),
-          strat(strat) {}
+          strat(strat),
+          max_operations(max_operations) {}
 
     ReducerTestParams(std::shared_ptr<Term> const& initial_term,
                       ReductionResult const& sample_result,
@@ -38,8 +41,9 @@ TEST_P(TestReducer, DefaultTests) {
     auto initial_term = param.initial_term;
     auto sample_result = param.sample_result;
     auto strat = param.strat;
+    auto max_op = param.max_operations;
 
-    ::strategy::Reducer reducer{std::move(initial_term), strat};
+    ::strategy::Reducer reducer{std::move(initial_term), strat, max_op};
     auto actual_result = reducer.MainLoop();
 
     EXPECT_EQ(actual_result, sample_result);

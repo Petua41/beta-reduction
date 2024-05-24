@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 
-#include "config/misc.h"
 #include "config/names.h"
 #include "model/enums/reduction_exit_status.h"
 #include "model/enums/reduction_strategies.h"
@@ -18,10 +17,13 @@ namespace strategy {
 class Reducer {
 private:
     std::unique_ptr<IStrategy> strategy_;
+    unsigned max_operations_;
 
 public:
     Reducer(std::shared_ptr<model::term::Term>&& root,
-            model::ReductionStrategies strat = model::ReductionStrategies::NO) {
+            model::ReductionStrategies strat = model::ReductionStrategies::NO,
+            unsigned max_operations = 0)
+        : max_operations_(max_operations) {
         switch (strat) {
             case model::ReductionStrategies::NO:
                 strategy_ = std::make_unique<NOStrategy>(std::move(root));
@@ -48,7 +50,7 @@ public:
 
         while (true) {
             ++operations;
-            if (operations > config::misc::max_operations && config::misc::max_operations > 0) {
+            if (operations > max_operations_ && max_operations_ > 0) {
                 LOG(WARNING) << "Too many reduction steps!";
                 return ReductionResult{strategy_->CurrentString(),
                                        ReductionExitStatus::TooManyOperations};
