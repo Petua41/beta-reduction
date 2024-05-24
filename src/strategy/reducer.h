@@ -32,6 +32,9 @@ public:
             case model::ReductionStrategies::CBV:
                 strategy_ = std::make_unique<CBVStrategy>(std::move(root));
                 break;
+            case model::ReductionStrategies::CBN:
+                strategy_ = std::make_unique<CBNStrategy>(std::move(root));
+                break;
             default:
                 break;
         }
