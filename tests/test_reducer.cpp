@@ -75,6 +75,14 @@ INSTANTIATE_TEST_SUITE_P(
         // CBV shouldn't reduce kWeakNormalForm:
         ReducerTestParams(kWeakNormalForm, weak_normal_form_result, ReductionStrategies::CBV)
     ));
+
+INSTANTIATE_TEST_SUITE_P(
+    ReducerCBNTests, TestReducer,
+    ::testing::Values(
+        ReducerTestParams(kSimpleRedex, simple_redex_result, ReductionStrategies::CBN),
+        // CBN shouldn't reduce kWeakNormalForm:
+        ReducerTestParams(kWeakNormalForm, weak_normal_form_result, ReductionStrategies::CBN)
+    ));
 // clang-format on
 
 }  // namespace tests
