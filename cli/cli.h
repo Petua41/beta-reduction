@@ -19,13 +19,13 @@ private:
     // Description to parse:
     boost::program_options::options_description desc_{"All options"};
 
-    // Paramemeters:
-    bool preprocessor_no_brackets_;
-    bool preprocessor_no_macros_;
-    bool ascii_mode_;
-    unsigned max_operations_;
-    model::ReductionStrategies strategy_;
-    std::string term_;
+    // Paramemeters (with default values):
+    bool preprocessor_no_brackets_{false};
+    bool preprocessor_no_macros_{false};
+    bool ascii_mode_{false};
+    unsigned max_operations_{0};
+    model::ReductionStrategies strategy_{model::ReductionStrategies::NO};
+    std::string term_{""};
 
     void ParseCommandLineArguments(int argc, char* argv[]);
     void DeclareOptions();

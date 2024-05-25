@@ -8,6 +8,9 @@
 #include "config/names.h"
 #include "option_descriptions.h"
 #include "option_names.h"
+#include "parser/parser.h"
+#include "preprocessor/preprocessor.h"
+#include "strategy/reducer.h"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -104,12 +107,48 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
 }
 
 void CLI::PrintHelpAndExit() {
-    std::cout << config::misc::kGlobalHelpPrefix << visible_desc_ << '\n';
+    std::cout << config::misc::kGlobalHelpPrefix << visible_desc_ << std::endl;
     exit(EXIT_SUCCESS);
 }
 
 int CLI::Run() {
-    // TODO(senichenkov): implement CLI::Run
+    // TODO(senichenkov): I should use exceptions instead of error codes wherewer possible
+    if (term_ == "") {
+        std::cout << "Usage: Beta-reduction_cli [options] term " << std::endl
+                  << "See Beta-reduction_cli --help" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    preprocessor::Preprocessor prep{term_, !preprocessor_no_brackets_, !preprocessor_no_macros_};
+    auto [success, preprocessed_input] = prep.Preprocess();
+    if (!success) {
+        std::cout << "Preprocessor error" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    parsing::Parser parser{preprocessed_input};
+    auto root_term = parser.Parse();
+    if (root_term == nullptr) {
+        std::cout << "Parser error" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    strategy::Reducer reducer{std::move(root_term), strategy_, max_operations_};
+    auto [result_string, exit_status] = reducer.MainLoop();
+    switch (exit_status) {
+        case model::ReductionExitStatus::NormalForm:
+            std::cout << "Reached normal form:" << std::endl << result_string << std::endl;
+            break;
+        case model::ReductionExitStatus::Loop:
+            std::cout << "Entered loop. First term in loop is:" << std::endl
+                      << result_string << std::endl;
+            break;
+        case model::ReductionExitStatus::TooManyOperations:
+            std::cout << "Too much operations (>= " << max_operations_
+                      << "). The last term was:" << std::endl
+                      << result_string << std::endl;
+            break;
+    }
 
     return EXIT_SUCCESS;
 }

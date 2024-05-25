@@ -5,7 +5,7 @@
 namespace {
 
 constexpr static char const kNot[] = "NOT";
-constexpr static char const kNotTermPrefix[] = "(Lp.((p (Lx.(Ly.x))) (Lx.(Ly.y)))) ";
+constexpr static char const kNotTermPrefix[] = "(Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) ";
 constexpr static char const kNotTermSuffix[] = "";
 
 }  // namespace
