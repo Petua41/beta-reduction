@@ -72,9 +72,20 @@ INSTANTIATE_TEST_SUITE_P(
         // Check multiple different numerals in single term:
         PreprocessorTestParams("(3 1)", "((Lf.(Lx.(f (f (f x))))) (Lf.(Lx.(f x))))", false),
         // Check multiple similar numerals in single term:
-        PreprocessorTestParams("(Lz.(4 4))", "(Lz.((Lf.(Lx.(f (f (f (f x)))))) (Lf.(Lx.(f (f (f (f x))))))))"),
+        PreprocessorTestParams("(Lz.(4 4))", "(Lz.((Lf.(Lx.(f (f (f (f x)))))) (Lf.(Lx.(f (f (f (f x))))))))", false),
         // Check multi-digit numeral:
-        PreprocessorTestParams("10", "(Lf.(Lx.(f (f (f (f (f (f (f (f (f (f x))))))))))))")
+        PreprocessorTestParams("10", "(Lf.(Lx.(f (f (f (f (f (f (f (f (f (f x))))))))))))", false)
+    ));
+
+INSTANTIATE_TEST_SUITE_P(
+    PreprocessorUnaryOperatorsTests, TestPreprocessor,
+    ::testing::Values(
+        // NOT operator (without space):
+        PreprocessorTestParams("(NOT(a b))", "((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) (a b))", false),
+        // NOT operator (with space):
+        PreprocessorTestParams("(NOT false)", "((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) (Lx.(Ly.y)))", false),
+        // NOT operator (with not-empty suffix):
+        PreprocessorTestParams("(Lz.(NOT z) A)", "(Lz.((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) z) A)", false)
     ));
 
 // clang-format on
