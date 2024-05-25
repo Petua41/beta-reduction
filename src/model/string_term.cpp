@@ -1,17 +1,18 @@
 #include "model/string_term.h"
 
-#include <cassert>
 #include <easylogging++.h>
 #include <memory>
 #include <regex>
 #include <string>
 
 #include "config/regular_expressions.h"
+#include "exceptions/parsing_error.h"
 #include "model/enums/term_types.h"
 #include "model/terms.h"
 
 namespace model::parsing {
 
+/// @throw ParsingError -- if term type couldn't be resolved (because of syntax errors)
 void StringTerm::ResolveType() {
     using namespace config::regular_expressions;
     if (std::regex_match(data_, variable_regex)) {
@@ -21,10 +22,11 @@ void StringTerm::ResolveType() {
     } else if (std::regex_match(data_, application_regex)) {
         type_ = TermTypes::Application;
     } else {
-        type_ = TermTypes::Error;
+        throw exceptions::ParsingError{"cannot resolve type of term", std::move(data_)};
     }
 }
 
+/// @throw ParsingError -- if term contains syntax errors
 void StringTerm::Split() {
     switch (Type()) {
         case TermTypes::Variable:
@@ -54,9 +56,10 @@ void StringTerm::Split() {
                 }
             }
 
-            // TODO(senichenkov): I should inform user if I cannot parse Application
-            // because of wrong brackets (and check brackets before parsing)
-            assert(space_position < data_.size() && data_[space_position] == ' ');
+            if (space_position >= data_.size() || data_[space_position] != ' ') {
+                throw exceptions::ParsingError{"invalid brackets or whitespace in abstraction",
+                                               std::move(data_)};
+            }
 
             auto const& lhs = data_.substr(1, space_position - 1);
             auto const& rhs = data_.substr(space_position + 1, data_.size() - space_position - 2);
@@ -69,12 +72,14 @@ void StringTerm::Split() {
     }
 }
 
+/// @throw ParsingError -- if term contains syntax or semantic errors
 [[nodiscard]] std::shared_ptr<term::Term> StringTerm::Parse() {
-    LOG(INFO) << "Parsing " << data_;
+    LOG(INFO) << "Parsing '" << data_ << "'...";
     Split();
 
     if (string_lhs_ != nullptr && string_rhs_ != nullptr) {
-        LOG(INFO) << "Splitted version: " << string_lhs_->data_ << " AND " << string_rhs_->data_;
+        LOG(INFO) << "\tSplitted version: '" << string_lhs_->data_ << "' and '"
+                  << string_rhs_->data_ << '\'';
     }
 
     switch (Type()) {
@@ -83,11 +88,13 @@ void StringTerm::Split() {
         case TermTypes::Abstraction: {
             auto lhs = string_lhs_->Parse();
             auto rhs = string_rhs_->Parse();
-            assert(rhs != nullptr);
-            assert(lhs != nullptr);
 
             auto* lhs_var = dynamic_cast<term::Variable*>(lhs.get());
-            assert(lhs_var != nullptr);
+
+            if (lhs_var == nullptr) {
+                throw exceptions::ParsingError{"lhs of Abstraction must be Variable",
+                                               std::move(data_)};
+            }
 
             return std::make_shared<term::Abstraction>(std::move(*lhs_var), std::move(rhs));
         }
@@ -95,13 +102,11 @@ void StringTerm::Split() {
             auto lhs = string_lhs_->Parse();
             auto rhs = string_rhs_->Parse();
 
-            assert(lhs != nullptr);
-            assert(rhs != nullptr);
-
             return std::make_shared<term::Application>(std::move(lhs), std::move(rhs));
         }
-        default:
-            return nullptr;
+            [[unlikely]] default :
+                // This case couldn't happen, because ResolveType() never sets type to Unknown
+                return nullptr;
     }
 }
 

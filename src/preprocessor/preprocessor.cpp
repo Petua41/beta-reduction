@@ -4,7 +4,7 @@
 
 namespace preprocessor {
 
-void Preprocessor::ReplaceMacros() {
+void Preprocessor::ReplaceMacros() noexcept {
     bool found_macros = true;
     do {
         found_macros = false;

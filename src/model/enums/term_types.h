@@ -4,7 +4,7 @@
 
 namespace model {
 
-enum class TermTypes { Variable, Abstraction, Application, Unknown, Error };
+enum class TermTypes { Variable, Abstraction, Application, Unknown };
 
 inline std::ostream const& operator<<(std::ostream& os, TermTypes const& tt) {
     switch (tt) {
@@ -19,9 +19,6 @@ inline std::ostream const& operator<<(std::ostream& os, TermTypes const& tt) {
             break;
         case TermTypes::Unknown:
             os << "Unknown";
-            break;
-        case TermTypes::Error:
-            os << "Error";
             break;
     }
     return os;

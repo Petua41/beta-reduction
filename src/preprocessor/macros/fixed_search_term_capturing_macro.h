@@ -140,7 +140,7 @@ protected:
     }
 
 public:
-    virtual bool IsPresent(std::string const& str) const override {
+    [[nodiscard]] virtual bool IsPresent(std::string const& str) const noexcept override {
         return str.find(macro) != std::string::npos;
     }
 };

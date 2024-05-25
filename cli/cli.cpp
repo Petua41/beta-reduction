@@ -6,6 +6,7 @@
 
 #include "config/misc.h"
 #include "config/names.h"
+#include "exceptions/fatal_error.h"
 #include "option_descriptions.h"
 #include "option_names.h"
 #include "parser/parser.h"
@@ -15,6 +16,13 @@
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char* argv[]) {
+    // FIXME(senichenkov): remove hotfix with easylogging++ configuration:
+    if (std::string{get_current_dir_name()}.find("target") == std::string::npos) {
+        el::Loggers::configureFromGlobal("build/target/logging.conf");
+    } else {
+        el::Loggers::configureFromGlobal("logging.conf");
+    }
+
     START_EASYLOGGINGPP(argc, argv);
 
     cli::CLI cli{argc, argv};
@@ -119,35 +127,38 @@ int CLI::Run() {
         return EXIT_FAILURE;
     }
 
-    preprocessor::Preprocessor prep{term_, !preprocessor_no_brackets_, !preprocessor_no_macros_};
-    auto [success, preprocessed_input] = prep.Preprocess();
-    if (!success) {
-        std::cout << "Preprocessor error" << std::endl;
-        return EXIT_FAILURE;
-    }
+    try {
+        preprocessor::Preprocessor prep{term_, !preprocessor_no_brackets_,
+                                        !preprocessor_no_macros_};
+        auto preprocessed_input = prep.Preprocess();
 
-    parsing::Parser parser{preprocessed_input};
-    auto root_term = parser.Parse();
-    if (root_term == nullptr) {
-        std::cout << "Parser error" << std::endl;
-        return EXIT_FAILURE;
-    }
+        if (preprocessed_input != term_) {
+            std::cout << "Checked brackets and replaced macros: " << std::endl;
+            std::cout << '\t' + preprocessed_input << std::endl;
+        }
 
-    strategy::Reducer reducer{std::move(root_term), strategy_, max_operations_};
-    auto [result_string, exit_status] = reducer.MainLoop();
-    switch (exit_status) {
-        case model::ReductionExitStatus::NormalForm:
-            std::cout << "Reached normal form:" << std::endl << result_string << std::endl;
-            break;
-        case model::ReductionExitStatus::Loop:
-            std::cout << "Entered loop. First term in loop is:" << std::endl
-                      << result_string << std::endl;
-            break;
-        case model::ReductionExitStatus::TooManyOperations:
-            std::cout << "Too much operations (>= " << max_operations_
-                      << "). The last term was:" << std::endl
-                      << result_string << std::endl;
-            break;
+        parsing::Parser parser{preprocessed_input};
+        auto root_term = parser.Parse();
+
+        strategy::Reducer reducer{std::move(root_term), strategy_, max_operations_};
+        auto [result_string, exit_status] = reducer.MainLoop();
+        switch (exit_status) {
+            case model::ReductionExitStatus::NormalForm:
+                std::cout << "Reached normal form:" << std::endl << result_string << std::endl;
+                break;
+            case model::ReductionExitStatus::Loop:
+                std::cout << "Entered loop. First term in loop is:" << std::endl
+                          << result_string << std::endl;
+                break;
+            case model::ReductionExitStatus::TooManyOperations:
+                std::cout << "Too much operations (>= " << max_operations_
+                          << "). The last term was:" << std::endl
+                          << result_string << std::endl;
+                break;
+        }
+    } catch (exceptions::FatalError const& e) {
+        std::cerr << e.what();
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;

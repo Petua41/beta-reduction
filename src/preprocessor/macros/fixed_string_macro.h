@@ -15,11 +15,11 @@ private:
 public:
     FixedStringMacro() : name_(Name), term_(Term) {}
 
-    bool IsPresent(std::string const& str) const override {
+    [[nodiscard]] bool IsPresent(std::string const& str) const noexcept override {
         return str.find(name_) != std::string::npos;
     }
 
-    std::string Replace(std::string const& str) const override {
+    [[nodiscard]] std::string Replace(std::string const& str) const noexcept override {
         auto pos = str.find(name_);
         auto& str_copy = const_cast<std::string&>(str);
         return str_copy.replace(pos, name_.size(), term_);

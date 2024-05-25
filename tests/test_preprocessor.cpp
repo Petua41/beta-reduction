@@ -13,16 +13,13 @@ struct PreprocessorTestParams {
     std::string sample_result_;
     bool check_brackets_;
     bool replace_macros_;
-    bool sample_brackets_are_correct_;
 
     PreprocessorTestParams(std::string&& input, std::string&& sample_result,
-                           bool check_brackets = true, bool replace_macros = true,
-                           bool sample_brackets_are_correct = true)
+                           bool check_brackets = true, bool replace_macros = true)
         : input_(std::move(input)),
           sample_result_(std::move(sample_result)),
           check_brackets_(check_brackets),
-          replace_macros_(replace_macros),
-          sample_brackets_are_correct_(sample_brackets_are_correct) {}
+          replace_macros_(replace_macros) {}
 };
 
 class TestPreprocessor : public ::testing::TestWithParam<PreprocessorTestParams> {};
@@ -33,12 +30,10 @@ TEST_P(TestPreprocessor, DefaultTests) {
     auto const& sample_result = p.sample_result_;
     auto const check_brackets = p.check_brackets_;
     auto const replace_macros = p.replace_macros_;
-    auto const sample_brackets_are_correct = p.sample_brackets_are_correct_;
 
     Preprocessor prep{input_, check_brackets, replace_macros};
-    auto [actual_brackets_are_correct, actual_result] = prep.Preprocess();
+    auto actual_result = prep.Preprocess();
 
-    EXPECT_EQ(actual_brackets_are_correct, sample_brackets_are_correct);
     EXPECT_EQ(actual_result, sample_result);
 }
 

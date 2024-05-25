@@ -6,8 +6,8 @@ namespace preprocessor {
 
 class IMacro {
 public:
-    virtual bool IsPresent(std::string const& str) const = 0;
-    virtual std::string Replace(std::string const& str) const = 0;
+    [[nodiscard]] virtual bool IsPresent(std::string const& str) const noexcept = 0;
+    [[nodiscard]] virtual std::string Replace(std::string const& str) const noexcept = 0;
 };
 
 }  // namespace preprocessor

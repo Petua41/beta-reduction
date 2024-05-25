@@ -11,7 +11,7 @@ namespace strategy {
 using namespace model::strategy;
 using namespace model::term;
 
-TermInfo APPLStrategy::SelectNext() {
+[[nodiscard]] TermInfo APPLStrategy::SelectNext() noexcept {
     history_.insert(CurrentString());
 
     auto is_redex = [](std::shared_ptr<Term> term) {

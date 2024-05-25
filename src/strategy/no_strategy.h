@@ -19,24 +19,24 @@ private:
     bool no_more_redexes_{false};
 
 protected:
-    std::unordered_set<std::string> const& History() const override {
+    [[nodiscard]] std::unordered_set<std::string> const& History() const noexcept override {
         return history_;
     }
 
-    bool CannotFindRedexes() const override {
+    [[nodiscard]] bool CannotFindRedexes() const noexcept override {
         return no_more_redexes_;
     }
 
-    std::shared_ptr<model::term::Term> CurrentTerm() const override {
+    [[nodiscard]] std::shared_ptr<model::term::Term> CurrentTerm() const noexcept override {
         return current_term_;
     }
 
 public:
     NOStrategy(std::shared_ptr<model::term::Term>&& root) : current_term_(std::move(root)) {}
 
-    model::strategy::TermInfo SelectNext() override;
+    [[nodiscard]] model::strategy::TermInfo SelectNext() noexcept override;
 
-    void SetCurrent(std::shared_ptr<model::term::Term>&& term) {
+    void SetCurrent(std::shared_ptr<model::term::Term>&& term) noexcept override {
         current_term_ = std::move(term);
     }
 };

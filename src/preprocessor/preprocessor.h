@@ -2,6 +2,9 @@
 
 #include <string>
 
+#include "exceptions/invalid_brackets_error.h"
+#include "model/enums/brackets_problems.h"
+
 namespace preprocessor {
 
 class Preprocessor {
@@ -13,8 +16,8 @@ private:
     bool const replace_macros_;
 
     /// @brief Checks and adds missing brackets
-    /// @return true if brackets are (now) correct, false otherwise
-    bool CheckBrackets() {
+    /// @throw InvalidBracketsError -- if there's some problem with brackets, that cannot be solved
+    void CheckBrackets() {
         // TODO(senichenkov): implement Preprocessor::CheckBrackets
 
         // FIXME(senichenkov): outermost brackets check should be smarter
@@ -28,7 +31,9 @@ private:
 
         // Check if brackets match:
         short counter = 0;
-        for (auto ch : input_) {
+        for (size_t i{0}; i < input_.size(); ++i) {
+            auto ch = input_[i];
+
             if (ch == '(') {
                 ++counter;
             } else if (ch == ')') {
@@ -36,33 +41,36 @@ private:
             }
 
             if (counter < 0) {
-                return false;
+                throw exceptions::InvalidBracketsError{std::move(input_), i,
+                                                       model::BracketsProblems::WasntOpened};
             }
         }
-        if (counter != 0) {
-            return false;
-        }
 
-        return true;
+        if (counter > 0) {
+            throw exceptions::InvalidBracketsError{std::move(input_), 0,
+                                                   model::BracketsProblems::WasntClosed};
+        } else if (counter < 0) {
+            throw exceptions::InvalidBracketsError{std::move(input_), input_.size() - 1,
+                                                   model::BracketsProblems::WasntOpened};
+        }
     }
 
-    void ReplaceMacros();
+    void ReplaceMacros() noexcept;
 
 public:
     Preprocessor(std::string const& input, bool check_brackets = true, bool replace_macros = true)
         : input_(input), check_brackets_(check_brackets), replace_macros_(replace_macros) {}
 
-    std::pair<bool, std::string> Preprocess() {
-        bool brackets_are_correct = true;
-
+    /// @throw InvalidBracketsError -- if there's some problem with brackets, that cannot be solved
+    [[nodiscard]] std::string Preprocess() {
         if (check_brackets_) {
-            brackets_are_correct = CheckBrackets();
+            CheckBrackets();
         }
         if (replace_macros_) {
             ReplaceMacros();
         }
 
-        return std::make_pair(brackets_are_correct, input_);
+        return input_;
     }
 };
 

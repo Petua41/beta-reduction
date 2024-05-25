@@ -14,11 +14,11 @@ namespace strategy {
 
 class IStrategy {
 protected:
-    virtual std::unordered_set<std::string> const& History() const = 0;
-    virtual bool CannotFindRedexes() const = 0;
-    virtual std::shared_ptr<model::term::Term> CurrentTerm() const = 0;
+    [[nodiscard]] virtual std::unordered_set<std::string> const& History() const noexcept = 0;
+    [[nodiscard]] virtual bool CannotFindRedexes() const noexcept = 0;
+    [[nodiscard]] virtual std::shared_ptr<model::term::Term> CurrentTerm() const noexcept = 0;
 
-    virtual bool IsInLoop() {
+    [[nodiscard]] virtual bool IsInLoop() noexcept {
         auto history = History();
         auto current_str = CurrentString();
 
@@ -26,9 +26,9 @@ protected:
     }
 
 public:
-    virtual model::strategy::TermInfo SelectNext() = 0;
+    [[nodiscard]] virtual model::strategy::TermInfo SelectNext() noexcept = 0;
 
-    virtual model::StrategyStates State() {
+    [[nodiscard]] virtual model::StrategyStates State() noexcept {
         if (CannotFindRedexes()) {
             return model::StrategyStates::NormalForm;
         }
@@ -38,11 +38,11 @@ public:
         return model::StrategyStates::Ready;
     }
 
-    virtual std::string CurrentString() const {
+    [[nodiscard]] virtual std::string CurrentString() const noexcept {
         return CurrentTerm()->ToString();
     }
 
-    virtual void SetCurrent(std::shared_ptr<model::term::Term>&& term) = 0;
+    virtual void SetCurrent(std::shared_ptr<model::term::Term>&& term) noexcept = 0;
 };
 
 }  // namespace strategy

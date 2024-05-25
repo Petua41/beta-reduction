@@ -8,7 +8,7 @@
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char** argv) {
-    // TODO(senichenkov): remove hotfix with easylogging++ configuration:
+    // FIXME(senichenkov): remove hotfix with easylogging++ configuration:
     if (std::string{get_current_dir_name()}.find("target") == std::string::npos) {
         el::Loggers::configureFromGlobal("build/target/logging.conf");
     } else {

@@ -13,11 +13,11 @@ protected:
     virtual std::string GenerateTerm(std::string&& macro) const = 0;
 
 public:
-    virtual bool IsPresent(std::string const& str) const override {
+    [[nodiscard]] virtual bool IsPresent(std::string const& str) const noexcept override {
         return std::regex_search(str, Regex());
     }
 
-    virtual std::string Replace(std::string const& str) const override {
+    [[nodiscard]] virtual std::string Replace(std::string const& str) const noexcept override {
         std::smatch match_res;
         if (std::regex_search(str, match_res, Regex())) {
             if (match_res.ready() && match_res.size() >= 1) {

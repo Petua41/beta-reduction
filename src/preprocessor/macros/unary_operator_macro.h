@@ -10,7 +10,7 @@ template <char const macro[], char const term_prefix[], char const term_suffix[]
           bool omit_spaces = true>
 class UnaryOperatorMacro : public FixedSearchTermCapturingMacro<macro> {
 public:
-    virtual std::string Replace(std::string const& str) const override {
+    [[nodiscard]] virtual std::string Replace(std::string const& str) const noexcept override {
         LOG(INFO) << "Replacing unary operator macro...";
         LOG(INFO) << "\tMacro is '" << macro << "', term prefix is '" << term_prefix
                   << "', term suffix is '" << term_suffix << '\'';
