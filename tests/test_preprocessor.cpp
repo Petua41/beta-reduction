@@ -102,6 +102,13 @@ INSTANTIATE_TEST_SUITE_P(
     ));
 
 INSTANTIATE_TEST_SUITE_P(
+    PreprocessorBinaryOperatorsTests, TestPreprocessor,
+    ::testing::Values(
+        // + operator (simple case):
+        PreprocessorTestParams("2 + 2", "(((Lm.(Ln.(Lf.(Lx.((m f) ((n f) x)))))) (Lf.(Lx.(f (f x))))) (Lf.(Lx.(f (f x)))))", false)
+    ));
+
+INSTANTIATE_TEST_SUITE_P(
     PreprocessorExceptionTests, TestPreprocessorException,
     ::testing::Values(
         // Opens more than closes:
