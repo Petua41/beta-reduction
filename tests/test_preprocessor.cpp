@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "exceptions/invalid_brackets_error.h"
 #include "preprocessor/preprocessor.h"
 
 namespace test {
@@ -26,15 +27,26 @@ class TestPreprocessor : public ::testing::TestWithParam<PreprocessorTestParams>
 
 TEST_P(TestPreprocessor, DefaultTests) {
     auto const& p = GetParam();
-    auto const& input_ = p.input_;
+    auto const& input = p.input_;
     auto const& sample_result = p.sample_result_;
     auto const check_brackets = p.check_brackets_;
     auto const replace_macros = p.replace_macros_;
 
-    Preprocessor prep{input_, check_brackets, replace_macros};
+    Preprocessor prep{input, check_brackets, replace_macros};
     auto actual_result = prep.Preprocess();
 
     EXPECT_EQ(actual_result, sample_result);
+}
+
+class TestPreprocessorException : public ::testing::TestWithParam<PreprocessorTestParams> {};
+
+TEST_P(TestPreprocessorException, ExceptionTests) {
+    auto const& p = GetParam();
+    auto input = p.input_;
+
+    Preprocessor prep{std::move(input), true, false};
+
+    EXPECT_THROW(prep.Preprocess(), exceptions::InvalidBracketsError);
 }
 
 // clang-format off
@@ -81,6 +93,15 @@ INSTANTIATE_TEST_SUITE_P(
         PreprocessorTestParams("(NOT false)", "((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) (Lx.(Ly.y)))", false),
         // NOT operator (with not-empty suffix):
         PreprocessorTestParams("(Lz.(NOT z) A)", "(Lz.((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) z) A)", false)
+    ));
+
+INSTANTIATE_TEST_SUITE_P(
+    PreprocessorExceptionTests, TestPreprocessorException,
+    ::testing::Values(
+        // Opens more than closes:
+        PreprocessorTestParams("(A(B C C)", ""),
+        // Closes more than opens:
+        PreprocessorTestParams("(A)B)C", "")
     ));
 
 // clang-format on

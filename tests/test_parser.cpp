@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "exceptions/parsing_error.h"
 #include "model/terms.h"
 #include "parser/parser.h"
 #include "sample_terms.h"
@@ -32,9 +33,17 @@ TEST_P(TestParser, DefaultTests) {
     parsing::Parser parser{input};
     auto actual_term = parser.Parse();
 
-    EXPECT_NE(actual_term, nullptr);
-
     EXPECT_EQ(*sample_term, *actual_term);
+}
+
+class TestParserException : public ::testing::TestWithParam<ParserTestParams> {};
+
+TEST_P(TestParserException, ExceptionTests) {
+    auto const& p = GetParam();
+    auto input = p.input_;
+
+    parsing::Parser parser{input};
+    EXPECT_THROW(parser.Parse(), exceptions::ParsingError);
 }
 
 // clang-format off
@@ -63,6 +72,17 @@ INSTANTIATE_TEST_SUITE_P(
 		ParserTestParams("(Lf.(Lx.(f (f x))))", kChurch2),
 		ParserTestParams("(Lf.((Lx.(f (x x))) (Lx.(f (x x)))))", kFixpointCombinator)
 	));
+
+INSTANTIATE_TEST_SUITE_P(
+    ParserExceptionTests, TestParserException,
+    ::testing::Values(
+        // Unknown type of term:
+        ParserTestParams("(L).x", nullptr),
+        // Invalid syntax in Application:
+        ParserTestParams("(A(X Y))", nullptr),
+        // Lhs of Abstraction is not Variable:
+        ParserTestParams("(L(A B).(X Y))", nullptr)
+    ));
 // clang-format on
 
 }  // namespace tests
