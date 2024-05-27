@@ -55,7 +55,13 @@ INSTANTIATE_TEST_SUITE_P(
     PreprocessorBracketsTests, TestPreprocessor,
     ::testing::Values(
         // Missing outermost brackets:
-        PreprocessorTestParams("Lx.(x x)", "(Lx.(x x))", true, false)
+        PreprocessorTestParams("Lx.(x x)", "(Lx.(x x))", true, false),
+        // Abstraction is missing brackets in it's rhs:
+        PreprocessorTestParams("(Lx.x y)", "(Lx.(x y))", true, false),
+        // OK (Abstraction's rhs is a single Variable):
+        PreprocessorTestParams("(Lx.x)", "(Lx.x)", true, false),
+        // A bit more complex case:
+        PreprocessorTestParams("(Lx.A Ly.B C)", "(Lx.(A Ly.(B C)))", true, false)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
