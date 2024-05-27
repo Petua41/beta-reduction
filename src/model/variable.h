@@ -1,6 +1,5 @@
 #pragma once
 
-#include <easylogging++.h>
 #include <memory>
 #include <string>
 
@@ -13,10 +12,7 @@ private:
     std::string name_;
 
 public:
-    Variable(std::string const& name) : name_(name) {
-        // FIXME(senichenkov): Without this parameter is somehow lost:
-        LOG(INFO) << "Creating Variable with name " << name << " (internal)";
-    }
+    Variable(std::string const& name) : name_(name) {}
 
     void AlphaConversionStep(std::string const& new_variable_name) override {
         name_ = new_variable_name;

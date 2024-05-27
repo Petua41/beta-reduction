@@ -4,6 +4,7 @@
 #include <easylogging++.h>
 #include <iostream>
 
+#include "config/easylogging++_config.h"
 #include "config/misc.h"
 #include "config/names.h"
 #include "exceptions/fatal_error.h"
@@ -16,12 +17,7 @@
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char* argv[]) {
-    // FIXME(senichenkov): remove hotfix with easylogging++ configuration:
-    if (std::string{get_current_dir_name()}.find("target") == std::string::npos) {
-        el::Loggers::configureFromGlobal("build/target/logging.conf");
-    } else {
-        el::Loggers::configureFromGlobal("logging.conf");
-    }
+    el::Loggers::reconfigureAllLoggers(config::GetConfigurations());
 
     START_EASYLOGGINGPP(argc, argv);
 
@@ -120,7 +116,6 @@ void CLI::PrintHelpAndExit() {
 }
 
 int CLI::Run() {
-    // TODO(senichenkov): I should use exceptions instead of error codes wherewer possible
     if (term_ == "") {
         std::cout << "Usage: Beta-reduction_cli [options] term " << std::endl
                   << "See Beta-reduction_cli --help" << std::endl;

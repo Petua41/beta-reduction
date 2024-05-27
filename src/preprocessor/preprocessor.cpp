@@ -52,7 +52,6 @@ void Preprocessor::CheckBracketsMatch() {
 }
 
 void Preprocessor::CheckOutermostBrackets() noexcept {
-    // FIXME(senichenkov): outermost brackets check should be smarter
     if (!input_.starts_with('(') || !input_.ends_with(')')) {
         // Input contains Abstractions or Applications:
         if (input_.find_first_of(" .") != std::string::npos) {

@@ -68,8 +68,6 @@ set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
 
 add_subdirectory("src")
 
-add_subdirectory("cfg")
-
 add_subdirectory("cli")
 
 # adding submodules
