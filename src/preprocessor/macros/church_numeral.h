@@ -1,21 +1,23 @@
 #pragma once
 
-#include <regex>
+#include <boost/xpressive/xpressive_static.hpp>
+#include <memory>
 #include <sstream>
 #include <string>
 
 #include "config/regular_expressions.h"
+#include "preprocessor/i_macro.h"
 #include "preprocessor/macros/regex_with_generation_macro.h"
 
 namespace preprocessor::terms {
 
 class ChuchNumeral : public RegexWithGenerationMacro {
 protected:
-    virtual std::regex const& Regex() const {
+    virtual boost::xpressive::sregex const& Regex() const override {
         return config::regular_expressions::church_numeral_regex;
     }
 
-    virtual std::string GenerateTerm(std::string&& macro) const {
+    virtual std::string GenerateTerm(std::string&& macro) const override {
         size_t number;
         try {
             number = std::stoul(macro);

@@ -1,15 +1,24 @@
 #pragma once
 
+#include <boost/xpressive/xpressive_static.hpp>
 #include <regex>
+
+#include "config/regex_helper_classes.h"
+
+namespace {
+
+using namespace boost::xpressive;
+
+}  // namespace
 
 namespace config::regular_expressions {
 
 // Term types:
-std::regex const variable_regex{R"([a-zA-Z]+)"};
-std::regex const abstraction_regex{R"(\([L|λ][a-zA-Z]+\..*\))"};
-std::regex const application_regex{R"(\(.* .*\))"};
+helper_classes::XpressiveTermTypes const kTermTypeRegexes{};
 
 // Macros:
-std::regex const church_numeral_regex{R"([0-9]+)"};
+sregex const church_numeral_regex = +digit;
+
+// auto const church_numeral_regex = boost::xpressive::sregex::compile(R"([0-9]+)");
 
 }  // namespace config::regular_expressions

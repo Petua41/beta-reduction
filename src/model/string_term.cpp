@@ -1,8 +1,8 @@
 #include "model/string_term.h"
 
+#include <boost/xpressive/regex_algorithms.hpp>
 #include <easylogging++.h>
 #include <memory>
-#include <regex>
 #include <string>
 
 #include "config/regular_expressions.h"
@@ -12,15 +12,18 @@
 
 namespace model::parsing {
 
-/// @throw ParsingError -- if term type couldn't be resolved (because of syntax errors)
+using enum TermTypes;
+
 void StringTerm::ResolveType() {
+    using namespace boost::xpressive;
     using namespace config::regular_expressions;
-    if (std::regex_match(data_, variable_regex)) {
-        type_ = TermTypes::Variable;
-    } else if (std::regex_match(data_, abstraction_regex)) {
-        type_ = TermTypes::Abstraction;
-    } else if (std::regex_match(data_, application_regex)) {
-        type_ = TermTypes::Application;
+
+    if (regex_match(data_.begin(), data_.end(), kTermTypeRegexes.Variable())) {
+        type_ = Variable;
+    } else if (regex_match(data_.begin(), data_.end(), kTermTypeRegexes.Abstraction())) {
+        type_ = Abstraction;
+    } else if (regex_match(data_.begin(), data_.end(), kTermTypeRegexes.Application())) {
+        type_ = Application;
     } else {
         throw exceptions::ParsingError{"cannot resolve type of term", std::move(data_)};
     }
@@ -29,9 +32,9 @@ void StringTerm::ResolveType() {
 /// @throw ParsingError -- if term contains syntax errors
 void StringTerm::Split() {
     switch (Type()) {
-        case TermTypes::Variable:
+        case Variable:
             break;
-        case TermTypes::Abstraction: {
+        case Abstraction: {
             auto first_dot_position = data_.find('.');
             auto const& lhs = data_.substr(2, first_dot_position - 2);
             auto const& rhs =
@@ -40,7 +43,7 @@ void StringTerm::Split() {
             string_rhs_ = std::make_unique<StringTerm>(std::move(rhs));
             break;
         }
-        case TermTypes::Application: {
+        case Application: {
             size_t brackets_count{0};
             size_t space_position;
             for (size_t i{1}; i < data_.size() - 1; ++i) {
@@ -83,9 +86,9 @@ void StringTerm::Split() {
     }
 
     switch (Type()) {
-        case TermTypes::Variable:
+        case Variable:
             return std::make_shared<term::Variable>(data_);
-        case TermTypes::Abstraction: {
+        case Abstraction: {
             auto lhs = string_lhs_->Parse();
             auto rhs = string_rhs_->Parse();
 
@@ -98,7 +101,7 @@ void StringTerm::Split() {
 
             return std::make_shared<term::Abstraction>(std::move(*lhs_var), std::move(rhs));
         }
-        case TermTypes::Application: {
+        case Application: {
             auto lhs = string_lhs_->Parse();
             auto rhs = string_rhs_->Parse();
 
