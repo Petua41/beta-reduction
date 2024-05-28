@@ -6,6 +6,7 @@
 #include <string>
 
 #include "config/regular_expressions.h"
+#include "postprocessor/macros/reverse_church_numeral.h"
 #include "preprocessor/i_macro.h"
 #include "preprocessor/macros/regex_with_generation_macro.h"
 
@@ -37,6 +38,10 @@ protected:
         }
         sstream << "))";
         return sstream.str();
+    }
+
+    virtual std::shared_ptr<IMacro> Reversed() const noexcept override {
+        return std::make_shared<postprocessor::terms::ReverseChuchNumeral>();
     }
 };
 

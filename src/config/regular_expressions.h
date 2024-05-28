@@ -19,6 +19,9 @@ helper_classes::XpressiveTermTypes const kTermTypeRegexes{};
 // Macros:
 sregex const church_numeral_regex = +digit;
 
+// Reverse macros:
+helper_classes::XpressiveReverseChurchNumeral const kReverseChurchNumeralRegex{};
+
 // auto const church_numeral_regex = boost::xpressive::sregex::compile(R"([0-9]+)");
 
 }  // namespace config::regular_expressions

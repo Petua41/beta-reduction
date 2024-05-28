@@ -8,10 +8,9 @@ using namespace boost::xpressive;
 
 }  // namespace
 
-
+/// @brief Helper classes for recursive regexes (because they cannot be declared directly)
 namespace config::helper_classes {
 
-/// @brief Helper class for recursive regexes (because they cannot be declared directly)
 class XpressiveTermTypes {
 private:
     sregex term_, variable_, abstraction_, application_;
@@ -35,6 +34,23 @@ public:
 
     [[nodiscard]] sregex const& Application() const noexcept {
         return application_;
+    }
+};
+
+class XpressiveReverseChurchNumeral {
+private:
+    sregex reverse_church_numeral_, inner_;
+
+public:
+    XpressiveReverseChurchNumeral() {
+        // Unicode lambda character isn't supported yet:
+        reverse_church_numeral_ = as_xpr('(') >> 'L' >> +alnum >> '.' >> '(' >> 'L' >> +alnum >>
+                                  '.' >> by_ref(inner_) >> ')' >> ')';
+        inner_ = +alnum | ('(' >> +alnum >> ' ' >> by_ref(inner_) >> ')');
+    }
+
+    [[nodiscard]] sregex const& ReverseChurchNumeral() const noexcept {
+        return reverse_church_numeral_;
     }
 };
 

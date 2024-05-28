@@ -19,6 +19,7 @@ namespace preprocessor::terms {
 
 using FixpointCombinator = FixedStringMacro<kY, kFixpointComb>;
 using True = FixedStringMacro<kTrue, kTrueTerm>;
-using False = FixedStringMacro<kFalse, kFalseTerm>;
+// False doesn't have reversed macro, because it's term is the same as the 0's one
+using False = FixedStringMacro<kFalse, kFalseTerm, false>;
 
 }  // namespace preprocessor::terms
