@@ -73,11 +73,8 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
     try {
         po::store(po::command_line_parser(argc, argv).options(desc_).positional(p_desc_).run(), vm);
         po::notify(vm);
-    } catch (po::invalid_command_line_syntax const& e) {
-        std::cout << "ERROR: " << e.what() << '\n';
-        exit(EXIT_FAILURE);
-    } catch (po::validation_error const& e) {
-        std::cout << "ERROR: " << e.what() << '\n';
+    } catch (po::error const& e) {
+        std::cout << "ERROR: " << e.what() << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -121,6 +118,8 @@ int CLI::Run() {
                   << "See Beta-reduction_cli --help" << std::endl;
         return EXIT_FAILURE;
     }
+
+    config::Names::Instance().SetASCIIMode(ascii_mode_);
 
     try {
         preprocessor::Preprocessor prep{term_, !preprocessor_no_brackets_,
