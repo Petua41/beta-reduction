@@ -98,14 +98,22 @@ INSTANTIATE_TEST_SUITE_P(
         // NOT operator (with space):
         PreprocessorTestParams("(NOT false)", "((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) (Lx.(Ly.y)))", false),
         // NOT operator (with not-empty suffix):
-        PreprocessorTestParams("(Lz.(NOT z) A)", "(Lz.((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) z) A)", false)
+        PreprocessorTestParams("(Lz.(NOT z) A)", "(Lz.((Lp.((p (Lx.(Ly.y))) (Lx.(Ly.x)))) z) A)", false),
+        // ISZERO operator:
+        PreprocessorTestParams("(ISZERO 0)", "((Ln.((n (Lx.(Lx.(Ly.y)))) (Lx.(Ly.x)))) (Lf.(Lx.x)))", false)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     PreprocessorBinaryOperatorsTests, TestPreprocessor,
     ::testing::Values(
-        // + operator (simple case):
-        PreprocessorTestParams("2 + 2", "(((Lm.(Ln.(Lf.(Lx.((m f) ((n f) x)))))) (Lf.(Lx.(f (f x))))) (Lf.(Lx.(f (f x)))))", false)
+        // + operator:
+        PreprocessorTestParams("(2 + 2)", "(((Lm.(Ln.(Lf.(Lx.((m f) ((n f) x)))))) (Lf.(Lx.(f (f x))))) (Lf.(Lx.(f (f x)))))", false),
+        // * operator:
+        PreprocessorTestParams("(1 * 2)", "(((Lm.(Ln.(Lf.(Lx.((m (n f)) x))))) (Lf.(Lx.(f x)))) (Lf.(Lx.(f (f x)))))", false),
+        // AND operator:
+        PreprocessorTestParams("(true && false)", "(((Lp.(Lq.((p q) p))) (Lx.(Ly.x))) (Lx.(Ly.y)))", false),
+        // OR operator:
+        PreprocessorTestParams("(true || false)", "(((Lp.(Lq.((p p) q))) (Lx.(Ly.x))) (Lx.(Ly.y)))", false)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
