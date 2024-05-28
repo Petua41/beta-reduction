@@ -20,8 +20,9 @@ private:
     boost::program_options::options_description desc_{"All options"};
 
     // Paramemeters (with default values):
-    bool preprocessor_no_brackets_{false};
-    bool preprocessor_no_macros_{false};
+    bool preprocessor_brackets_{true};
+    bool preprocessor_macros_{true};
+    bool postprocessor_macros_{true};
     bool ascii_mode_{false};
     unsigned max_operations_{0};
     model::ReductionStrategies strategy_{model::ReductionStrategies::NO};

@@ -11,6 +11,7 @@
 #include "option_descriptions.h"
 #include "option_names.h"
 #include "parser/parser.h"
+#include "postprocessor/postprocessor.h"
 #include "preprocessor/preprocessor.h"
 #include "strategy/reducer.h"
 
@@ -42,6 +43,11 @@ void CLI::DeclareOptions() {
         (kRaw, kdRaw)
     ;
 
+    po::options_description postprocessor{"Postprocessor options"};
+    postprocessor.add_options()
+        (kRawOutput, kdRawOutput)
+    ;
+
     po::options_description config{"Configuration options"};
     config.add_options()
         (kASCII, kdASCII)
@@ -64,7 +70,7 @@ void CLI::DeclareOptions() {
     p_desc_.add(kLongTerm, -1);
 
     // Add option groups to description objects:
-    visible_desc_.add(preprocessor).add(config).add(generic);
+    visible_desc_.add(preprocessor).add(postprocessor).add(config).add(generic);
     desc_.add(visible_desc_).add(hidden);
 }
 
@@ -83,14 +89,17 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
     }
 
     if (vm.contains(kLongNoBrackets)) {
-        preprocessor_no_brackets_ = true;
+        preprocessor_brackets_ = false;
     }
     if (vm.contains(kLongNoMacros)) {
-        preprocessor_no_macros_ = true;
+        preprocessor_macros_ = false;
     }
     if (vm.contains(kLongRaw)) {
-        preprocessor_no_brackets_ = true;
-        preprocessor_no_macros_ = true;
+        preprocessor_brackets_ = false;
+        preprocessor_macros_ = false;
+    }
+    if (vm.contains(kLongRawOutput)) {
+        postprocessor_macros_ = false;
     }
     if (vm.contains(kLongASCII)) {
         ascii_mode_ = true;
@@ -122,13 +131,12 @@ int CLI::Run() {
     config::Names::Instance().SetASCIIMode(ascii_mode_);
 
     try {
-        preprocessor::Preprocessor prep{term_, !preprocessor_no_brackets_,
-                                        !preprocessor_no_macros_};
+        preprocessor::Preprocessor prep{term_, preprocessor_brackets_, preprocessor_macros_};
         auto preprocessed_input = prep.Preprocess();
 
         if (preprocessed_input != term_) {
-            std::cout << "Checked brackets and replaced macros: " << std::endl;
-            std::cout << '\t' + preprocessed_input << std::endl;
+            std::cout << "Checked brackets and replaced macros: " << std::endl
+                      << '\t' << preprocessed_input << std::endl;
         }
 
         parsing::Parser parser{preprocessed_input};
@@ -138,17 +146,24 @@ int CLI::Run() {
         auto [result_string, exit_status] = reducer.MainLoop();
         switch (exit_status) {
             case model::ReductionExitStatus::NormalForm:
-                std::cout << "Reached normal form:" << std::endl << result_string << std::endl;
+                std::cout << "Reached normal form:" << std::endl
+                          << '\t' << result_string << std::endl;
                 break;
             case model::ReductionExitStatus::Loop:
                 std::cout << "Entered loop. First term in loop is:" << std::endl
-                          << result_string << std::endl;
+                          << '\t' << result_string << std::endl;
                 break;
             case model::ReductionExitStatus::TooManyOperations:
                 std::cout << "Too much operations (>= " << max_operations_
                           << "). The last term was:" << std::endl
-                          << result_string << std::endl;
+                          << '\t' << result_string << std::endl;
                 break;
+        }
+
+        postprocessor::Postprocessor postp{result_string, postprocessor_macros_};
+        auto postprocessed_result = postp.Process();
+        if (postprocessed_result != result_string) {
+            std::cout << "Which is:" << std::endl << '\t' << postprocessed_result << std::endl;
         }
     } catch (exceptions::FatalError const& e) {
         std::cerr << e.what();
