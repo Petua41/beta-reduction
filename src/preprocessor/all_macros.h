@@ -6,7 +6,6 @@
 #include "preprocessor/i_macro.h"
 #include "preprocessor/macros/church_numeral.h"
 #include "preprocessor/macros/fixed_strings.h"
-#include "preprocessor/macros/operators.h"
 
 namespace {
 

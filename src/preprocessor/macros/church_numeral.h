@@ -7,17 +7,14 @@
 
 #include "config/regular_expressions.h"
 #include "preprocessor/i_macro.h"
-#include "preprocessor/macros/regex_with_generation_macro.h"
 
 namespace preprocessor::terms {
 
-class ChuchNumeral : public RegexWithGenerationMacro {
-protected:
-    virtual boost::xpressive::sregex const& Regex() const override {
-        return config::regular_expressions::kChurchNumeralRegex;
-    }
+class ChuchNumeral : public IMacro {
+private:
+    boost::xpressive::sregex const& regex_ = config::regular_expressions::kChurchNumeralRegex;
 
-    virtual std::string GenerateTerm(std::string&& macro) const override {
+    std::string GenerateTerm(std::string&& macro) const {
         size_t number;
         try {
             number = std::stoul(macro);
@@ -37,6 +34,32 @@ protected:
         }
         sstream << "))";
         return sstream.str();
+    }
+
+public:
+    [[nodiscard]] virtual bool IsPresent(std::string const& str) const noexcept override {
+        return boost::xpressive::regex_search(str, regex_);
+    }
+
+    [[nodiscard]] virtual std::string Replace(std::string const& str) const noexcept override {
+        boost::xpressive::smatch match_res;
+        if (boost::xpressive::regex_search(str, match_res, regex_)) {
+            if (match_res.size() >= 1) {
+                // Replace only first match:
+                auto matched_string = match_res.str(0);
+                auto start = match_res.position(0);
+                auto length = match_res.length(0);
+
+                auto term = GenerateTerm(std::move(matched_string));
+
+                std::string result{str};
+                result.replace(start, length, term);
+                return result;
+            }
+        }
+
+        // No match:
+        return str;
     }
 };
 
