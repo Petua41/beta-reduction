@@ -9,9 +9,10 @@ namespace config {
     el::Configurations conf;
 
     conf.setToDefault();
-    conf.setGlobally(el::ConfigurationType::ToFile, "false");
+    conf.setGlobally(el::ConfigurationType::ToFile, "true");
     conf.setGlobally(el::ConfigurationType::Format, "%msg");
-    conf.setGlobally(el::ConfigurationType::ToStandardOutput, "true");
+    conf.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
+    conf.setGlobally(el::ConfigurationType::Filename, "latest.log");
 
     return conf;
 }
