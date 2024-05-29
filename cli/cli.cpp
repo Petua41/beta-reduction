@@ -123,8 +123,8 @@ void CLI::PrintHelpAndExit() {
 
 int CLI::Run() {
     if (term_ == "") {
-        std::cout << "Usage: Beta-reduction_cli [options] term " << std::endl
-                  << "See Beta-reduction_cli --help" << std::endl;
+        std::cout << "Usage: beta-red [options] term " << std::endl
+                  << "See beta-red --help" << std::endl;
         return EXIT_FAILURE;
     }
 

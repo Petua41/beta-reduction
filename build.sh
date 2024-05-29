@@ -58,7 +58,7 @@ rm CMakeCache.txt
 cmake $PREFIX .. && make $JOBS_OPTION
 
 cd ..
-ln -svf build/target/Beta-reduction_cli ./Beta-reduction_cli
+ln -svf build/target/beta-red ./beta-red
 
 if [[ $NO_TESTS != true ]]; then
   ln -svf build/target/Beta-reduction_test ./Beta-reduction_test

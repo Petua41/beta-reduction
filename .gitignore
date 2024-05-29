@@ -39,7 +39,7 @@ build/**
 lib/**
 
 # Link to compiled executables
-Beta-reduction_cli
+beta-red
 Beta-reduction_test
 
 # logs

@@ -1,4 +1,4 @@
-set(BINARY ${CMAKE_PROJECT_NAME}_cli)
+set(BINARY beta-red)
 
 file(GLOB_RECURSE lib_sources "*.h*" "*.cpp*")
 
