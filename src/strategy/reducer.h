@@ -12,13 +12,10 @@ namespace strategy {
 class Reducer {
 private:
     std::unique_ptr<IStrategy> strategy_;
-    unsigned max_operations_;
 
 public:
     Reducer(std::shared_ptr<model::term::Term>&& root,
-            model::ReductionStrategies strat = model::ReductionStrategies::NO,
-            unsigned max_operations = 0)
-        : max_operations_(max_operations) {
+            model::ReductionStrategies strat = model::ReductionStrategies::NO) {
         using enum model::ReductionStrategies;
 
         switch (strat) {

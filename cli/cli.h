@@ -23,7 +23,6 @@ private:
     bool preprocessor_brackets_{true};
     bool preprocessor_macros_{true};
     bool postprocessor_macros_{true};
-    unsigned max_operations_{0};
     model::ReductionStrategies strategy_{model::ReductionStrategies::NO};
     std::string term_{""};
 

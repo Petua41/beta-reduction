@@ -1,6 +1,5 @@
 #include "strategy/appl_strategy.h"
 
-#include <cassert>
 #include <memory>
 
 #include "model/terms.h"
@@ -12,8 +11,6 @@ using namespace model::strategy;
 using namespace model::term;
 
 [[nodiscard]] TermInfo APPLStrategy::SelectNext() noexcept {
-    history_.insert(CurrentString());
-
     auto is_redex = [](std::shared_ptr<Term> term) {
         auto appl = dynamic_cast<Application*>(term.get());
         return appl != nullptr && appl->IsRedex();

@@ -18,15 +18,12 @@ struct ReducerTestParams {
     std::shared_ptr<Term> initial_term;
     ReductionResult sample_result;
     ReductionStrategies strat;
-    unsigned max_operations;
 
     ReducerTestParams(std::shared_ptr<Term>&& initial_term, ReductionResult&& sample_result,
-                      ReductionStrategies strat = ReductionStrategies::NO,
-                      unsigned max_operations = 0)
+                      ReductionStrategies strat = ReductionStrategies::NO)
         : initial_term(std::move(initial_term)),
           sample_result(std::move(sample_result)),
-          strat(strat),
-          max_operations(max_operations) {}
+          strat(strat) {}
 
     ReducerTestParams(std::shared_ptr<Term> const& initial_term,
                       ReductionResult const& sample_result,
@@ -41,9 +38,8 @@ TEST_P(TestReducer, DefaultTests) {
     auto initial_term = param.initial_term;
     auto sample_result = param.sample_result;
     auto strat = param.strat;
-    auto max_op = param.max_operations;
 
-    ::strategy::Reducer reducer{std::move(initial_term), strat, max_op};
+    ::strategy::Reducer reducer{std::move(initial_term), strat};
     auto actual_result = reducer.MainLoop();
 
     EXPECT_EQ(actual_result, sample_result);
@@ -52,8 +48,6 @@ TEST_P(TestReducer, DefaultTests) {
 ReductionResult const kSimpleRedexResult{"y", ReductionExitStatus::NormalForm};
 ReductionResult const kAdditionResult{"(Lf.(Lx.(f (f (f (f x))))))",
                                       ReductionExitStatus::NormalForm};
-ReductionResult const kApplLoopResult{"(Lx.(y ((Lz.(z z)) (Lz.(z z)))))",
-                                      ReductionExitStatus::Loop};
 ReductionResult const kWeakNormalFormResult{"(Lx.((Ly.y) x))", ReductionExitStatus::NormalForm};
 
 // clang-format off
@@ -67,9 +61,7 @@ INSTANTIATE_TEST_SUITE_P(
 INSTANTIATE_TEST_SUITE_P(
     ReducerApplicativeOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::APPL),
-        // Applicative order should reduce Fixpoint Combinator into itself:
-        ReducerTestParams(kLoopsOnAppl, kApplLoopResult, ReductionStrategies::APPL)
+        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::APPL)
     ));
 
 INSTANTIATE_TEST_SUITE_P(

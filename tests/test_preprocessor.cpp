@@ -70,7 +70,7 @@ INSTANTIATE_TEST_SUITE_P(
     PreprocessorFixedStringMacrosTests, TestPreprocessor,
     ::testing::Values(
         // Fixpoint combinator:
-        PreprocessorTestParams("(Y R)", "((Lf.((Lx.(f(x x)))) (Lx.(f(x x)))))) R)", false),
+        PreprocessorTestParams("(Y R)", "((Lf.((Lx.(f (x x))) (Lx.(f (x x))))) R)", false),
         // True:
         PreprocessorTestParams("(Lz.true)", "(Lz.(Lx.(Ly.x)))", false),
         // False:

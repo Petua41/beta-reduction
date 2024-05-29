@@ -79,22 +79,6 @@ auto const k2Plus2 = std::make_shared<Application>(
         kChurch2),
     kChurch2);
 
-auto const kLoopsOnAppl = std::make_shared<Abstraction>(
-    Variable{"x"},
-    std::make_shared<Application>(
-        std::make_shared<Variable>("y"),
-        std::make_shared<Application>(
-            std::make_shared<Abstraction>(
-                Variable{"z"},
-                std::make_shared<Application>(
-                    std::make_shared<Variable>("z"),
-                    std::make_shared<Variable>("z"))),
-            std::make_shared<Abstraction>(
-                Variable{"z"},
-                std::make_shared<Application>(
-                    std::make_shared<Variable>("z"),
-                    std::make_shared<Variable>("z"))))));
-
 auto const kWeakNormalForm = std::make_shared<Abstraction>(
     Variable{"x"},
     std::make_shared<Application>(

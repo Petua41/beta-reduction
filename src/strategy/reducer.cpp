@@ -16,24 +16,9 @@ using namespace model::term;
 using namespace model::strategy;
 
 [[nodiscard]] ReductionResult Reducer::MainLoop() noexcept {
-    unsigned operations{0};
-
     while (true) {
-        ++operations;
-        if (operations > max_operations_ && max_operations_ > 0) {
-            LOG(WARNING) << "Too many reduction steps!";
-            return ReductionResult{strategy_->CurrentString(),
-                                   ReductionExitStatus::TooManyOperations};
-        }
-
-        auto state = strategy_->State();
-        switch (state) {
-            case StrategyStates::NormalForm:
-                return ReductionResult{strategy_->CurrentString(), ReductionExitStatus::NormalForm};
-            case StrategyStates::Loop:
-                return ReductionResult{strategy_->CurrentString(), ReductionExitStatus::Loop};
-            default:
-                break;
+        if (strategy_->IsInNormalForm()) {
+            return ReductionResult{strategy_->CurrentString(), ReductionExitStatus::NormalForm};
         }
 
         auto next_redex_info = strategy_->SelectNext();
@@ -48,7 +33,7 @@ using namespace model::strategy;
 
         auto reduced_redex = redex->BetaReductionStep();
 
-        LOG(INFO) << redex->ToString() << " -Beta-> " << reduced_redex->ToString();
+        auto old_term = strategy_->CurrentString();
 
         auto parent = next_redex_info.parent;
         if (parent == nullptr) {  // redex was the outermost term
@@ -57,12 +42,11 @@ using namespace model::strategy;
             if (next_redex_info.in_lhs) {
                 parent->Lhs(std::move(reduced_redex));
             } else {
-                LOG(INFO) << "Setting rhs";
-                LOG(INFO) << "Parent is '" << parent->ToString() << '\'';
                 parent->Rhs(std::move(reduced_redex));
-                LOG(INFO) << "Parent is '" << parent->ToString() << '\'';
             }
         }
+
+        LOG(INFO) << old_term << " -Beta-> " << strategy_->CurrentString();
     }
 }
 

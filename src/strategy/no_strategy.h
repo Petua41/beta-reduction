@@ -15,29 +15,23 @@ namespace strategy {
 class NOStrategy : public IStrategy {
 private:
     std::shared_ptr<model::term::Term> current_term_;
-    std::unordered_set<std::string> history_{};
     bool no_more_redexes_{false};
-
-protected:
-    [[nodiscard]] std::unordered_set<std::string> const& History() const noexcept override {
-        return history_;
-    }
-
-    [[nodiscard]] bool CannotFindRedexes() const noexcept override {
-        return no_more_redexes_;
-    }
-
-    [[nodiscard]] std::shared_ptr<model::term::Term> CurrentTerm() const noexcept override {
-        return current_term_;
-    }
 
 public:
     NOStrategy(std::shared_ptr<model::term::Term>&& root) : current_term_(std::move(root)) {}
 
     [[nodiscard]] model::strategy::TermInfo SelectNext() noexcept override;
 
+    [[nodiscard]] virtual std::string CurrentString() const noexcept override {
+        return current_term_->ToString();
+    }
+
     void SetCurrent(std::shared_ptr<model::term::Term>&& term) noexcept override {
         current_term_ = std::move(term);
+    }
+
+    [[nodiscard]] virtual bool IsInNormalForm() const noexcept override {
+        return no_more_redexes_;
     }
 };
 

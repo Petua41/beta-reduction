@@ -5,7 +5,7 @@
 namespace {
 
 constexpr static char kY[] = "Y";
-constexpr static char kFixpointComb[] = "(Lf.((Lx.(f(x x)))) (Lx.(f(x x))))))";
+constexpr static char kFixpointComb[] = "(Lf.((Lx.(f (x x))) (Lx.(f (x x)))))";
 
 constexpr static char kTrue[] = "true";
 constexpr static char kTrueTerm[] = "(Lx.(Ly.x))";

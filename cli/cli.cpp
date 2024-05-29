@@ -43,7 +43,6 @@ void CLI::DeclareOptions() {
 
     po::options_description config{"Configuration options"};
     config.add_options()
-        (kMaxOp, po::value<unsigned>(), kDMaxOp)
         (kStrategy, po::value<StrategyOption>(), kDStrategy)
     ;
 
@@ -90,9 +89,6 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
         preprocessor_brackets_ = false;
         preprocessor_macros_ = false;
     }
-    if (vm.contains(kLongMaxOp)) {
-        max_operations_ = vm[kLongMaxOp].as<unsigned>();
-    }
     if (vm.contains(kLongStrategy)) {
         auto strat_opt = vm[kLongStrategy].as<StrategyOption>();
         strategy_ = strat_opt.strategy_;
@@ -126,23 +122,9 @@ int CLI::Run() {
         parsing::Parser parser{preprocessed_input};
         auto root_term = parser.Parse();
 
-        strategy::Reducer reducer{std::move(root_term), strategy_, max_operations_};
+        strategy::Reducer reducer{std::move(root_term), strategy_};
         auto [result_string, exit_status] = reducer.MainLoop();
-        switch (exit_status) {
-            case model::ReductionExitStatus::NormalForm:
-                std::cout << "Reached normal form:" << std::endl
-                          << '\t' << result_string << std::endl;
-                break;
-            case model::ReductionExitStatus::Loop:
-                std::cout << "Entered loop. First term in loop is:" << std::endl
-                          << '\t' << result_string << std::endl;
-                break;
-            case model::ReductionExitStatus::TooManyOperations:
-                std::cout << "Too much operations (>= " << max_operations_
-                          << "). The last term was:" << std::endl
-                          << '\t' << result_string << std::endl;
-                break;
-        }
+        std::cout << "Reached normal form:" << std::endl << '\t' << result_string << std::endl;
     } catch (exceptions::FatalError const& e) {
         std::cerr << e.what();
         return EXIT_FAILURE;
