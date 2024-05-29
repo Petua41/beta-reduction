@@ -16,16 +16,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/target")
 set(BUILD_OPTS "-DELPP_THREAD_SAFE")
 
 # RELEASE build options
-set(RELEASE_BUILD_OPTS "-O3")
+string(JOIN ";" RELEASE_BUILD_OPTS
+    ${BUILD_OPTS}
+    "-O3")
 
 # Set common DEBUG build options
 string(JOIN ";" DEBUG_BUILD_OPTS
+    ${BUILD_OPTS}
     "-g"
     "-Wall"
     "-Wextra"
     "-Werror"
-    "-fno-omit-frame-pointer"
-    "-fno-optimize-sibling-calls"
     "-O0")
 
 add_compile_options("$<$<CONFIG:Debug>:${DEBUG_BUILD_OPTS}>")
@@ -35,17 +36,6 @@ add_compile_options("$<$<CONFIG:Release>:${RELEASE_BUILD_OPTS}>")
 # configuring boost
 set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost 1.72.0 REQUIRED COMPONENTS program_options)
-include_directories(${Boost_INCLUDE_DIRS})
-message(${Boost_INCLUDE_DIRS})
-
-# providing subdirectories for header inclusion
-include_directories(
-        "src"
-        "tests"
-)
-
-# easylogging++
-include_directories(SYSTEM "lib/easyloggingpp/src")
 
 set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
 set( CMAKE_BUILD_TYPE "Release" )
