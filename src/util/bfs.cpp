@@ -60,13 +60,13 @@ std::stack<std::vector<TermInfo>> BFSSplitByLevelsSkipChildren(
 
         auto next_level{current_level + 1};
 
-        auto abstr = dynamic_cast<Abstraction*>(current.term.get());
-        auto appl = dynamic_cast<Application*>(current.term.get());
-        if (abstr) {
-            to_visit.emplace(TermInfo{abstr->Rhs(), current.term, false}, next_level);
-        } else if (appl) {
-            to_visit.emplace(TermInfo{appl->Lhs(), current.term, true}, next_level);
-            to_visit.emplace(TermInfo{appl->Rhs(), current.term, false}, next_level);
+        auto lhs_ptr = current.term->Lhs();
+        auto rhs_ptr = current.term->Rhs();
+        if (lhs_ptr != nullptr) {
+            to_visit.emplace(TermInfo{lhs_ptr, current.term, true}, next_level);
+        }
+        if (rhs_ptr != nullptr) {
+            to_visit.emplace(TermInfo{rhs_ptr, current.term, false}, next_level);
         }
 
         visited.insert(current);

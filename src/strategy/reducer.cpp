@@ -56,9 +56,12 @@ using namespace model::strategy;
             strategy_->SetCurrent(std::move(reduced_redex));
         } else {
             if (next_redex_info.in_lhs) {
-                parent->ReplaceLhs(std::move(reduced_redex));
+                parent->Lhs(std::move(reduced_redex));
             } else {
-                parent->ReplaceRhs(std::move(reduced_redex));
+                LOG(INFO) << "Setting rhs";
+                LOG(INFO) << "Parent is '" << parent->ToString() << '\'';
+                parent->Rhs(std::move(reduced_redex));
+                LOG(INFO) << "Parent is '" << parent->ToString() << '\'';
             }
         }
     }

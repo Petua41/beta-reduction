@@ -12,43 +12,6 @@ namespace util::algorithm {
 using namespace model::term;
 using namespace model::strategy;
 
-std::shared_ptr<Term> DFSFind(std::shared_ptr<Term> root,
-                              std::function<bool(std::shared_ptr<Term>)> pred) {
-    if (pred(root)) {
-        return root;
-    }
-
-    std::stack<std::shared_ptr<Term>> to_visit;
-    to_visit.push(root);
-    std::unordered_set<std::shared_ptr<Term>> visited;
-
-    while (to_visit.size()) {
-        auto current = to_visit.top();
-        to_visit.pop();
-
-        if (visited.find(current) != visited.end()) {
-            continue;
-        }
-
-        if (pred(current)) {
-            return current;
-        }
-
-        auto abstr = dynamic_cast<Abstraction*>(current.get());
-        auto appl = dynamic_cast<Application*>(current.get());
-        if (abstr) {
-            to_visit.push(abstr->Lhs());
-            to_visit.push(abstr->Rhs());
-        } else if (appl) {
-            to_visit.push(appl->Lhs());
-            to_visit.push(appl->Rhs());
-        }
-
-        visited.insert(current);
-    }
-    return nullptr;
-}
-
 TermInfo DFSFindTermInfo(std::shared_ptr<Term> root,
                          std::function<bool(std::shared_ptr<Term>)> pred) {
     return DFSFindTermInfoSkipChildren(
@@ -87,13 +50,13 @@ model::strategy::TermInfo DFSFindTermInfoSkipChildren(
             continue;
         }
 
-        auto abstr = dynamic_cast<Abstraction*>(current.term.get());
-        auto appl = dynamic_cast<Application*>(current.term.get());
-        if (abstr) {
-            to_visit.emplace(abstr->Rhs(), current.term, false);
-        } else if (appl) {
-            to_visit.emplace(appl->Lhs(), current.term, true);
-            to_visit.emplace(appl->Rhs(), current.term, false);
+        auto lhs_ptr = current.term->Lhs();
+        auto rhs_ptr = current.term->Rhs();
+        if (lhs_ptr != nullptr) {
+            to_visit.emplace(lhs_ptr, current.term, true);
+        }
+        if (rhs_ptr != nullptr) {
+            to_visit.emplace(rhs_ptr, current.term, false);
         }
 
         visited.insert(current);

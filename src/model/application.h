@@ -19,11 +19,6 @@ public:
     Application(std::shared_ptr<Term>&& lhs, std::shared_ptr<Term>&& rhs)
         : lhs_(std::move(lhs)), rhs_(std::move(rhs)) {}
 
-    void AlphaConversionStep(std::string const& new_variable_name) override {
-        lhs_->AlphaConversionStep(new_variable_name);
-        rhs_->AlphaConversionStep(new_variable_name);
-    }
-
     std::shared_ptr<Term> ReplaceVariableWithTerm(std::string const& variable_name,
                                                   std::shared_ptr<Term> const term) const override {
         std::shared_ptr<Term> new_lhs = lhs_->ReplaceVariableWithTerm(variable_name, term);
@@ -31,19 +26,19 @@ public:
         return std::make_shared<Application>(std::move(new_lhs), std::move(new_rhs));
     }
 
-    std::shared_ptr<Term> Lhs() const {
+    std::shared_ptr<Term> Lhs() const override {
         return lhs_;
     }
 
-    std::shared_ptr<Term> Rhs() const {
+    std::shared_ptr<Term> Rhs() const override {
         return rhs_;
     }
 
-    void ReplaceLhs(std::shared_ptr<Term>&& new_lhs) override {
+    void Lhs(std::shared_ptr<Term>&& new_lhs) override {
         lhs_ = std::move(new_lhs);
     }
 
-    void ReplaceRhs(std::shared_ptr<Term>&& new_rhs) override {
+    void Rhs(std::shared_ptr<Term>&& new_rhs) override {
         rhs_ = std::move(new_rhs);
     }
 

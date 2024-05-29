@@ -7,9 +7,6 @@
 
 namespace util::algorithm {
 
-std::shared_ptr<model::term::Term> DFSFind(
-        std::shared_ptr<model::term::Term> root,
-        std::function<bool(std::shared_ptr<model::term::Term>)> pred);
 model::strategy::TermInfo DFSFindTermInfo(
         std::shared_ptr<model::term::Term> root,
         std::function<bool(std::shared_ptr<model::term::Term>)> pred);

@@ -23,22 +23,13 @@ public:
     Abstraction(Variable const& lhs, std::shared_ptr<Term>&& rhs)
         : lhs_(lhs), rhs_(std::move(rhs)) {}
 
-    void AlphaConversionStep(std::string const& new_variable_name) override {
-        lhs_.AlphaConversionStep(new_variable_name);
-        rhs_->AlphaConversionStep(new_variable_name);
-    }
-
     std::shared_ptr<Term> ReplaceVariableWithTerm(std::string const& variable_name,
                                                   std::shared_ptr<Term> const term) const override {
         std::shared_ptr<Term> new_rhs = rhs_->ReplaceVariableWithTerm(variable_name, term);
         return std::make_shared<Abstraction>(lhs_, std::move(new_rhs));
     }
 
-    std::shared_ptr<Variable> Lhs() const {
-        return std::make_shared<Variable>(lhs_);
-    }
-
-    std::shared_ptr<Term> Rhs() const {
+    std::shared_ptr<Term> Rhs() const override {
         return rhs_;
     }
 
@@ -46,11 +37,7 @@ public:
         return lhs_.ToString();
     }
 
-    void ReplaceLhs(std::shared_ptr<Term>&& new_lhs) override {
-        LOG(WARNING) << "Trying to replace Variable's Lhs with " << new_lhs->ToString();
-    }
-
-    void ReplaceRhs(std::shared_ptr<Term>&& new_rhs) override {
+    void Rhs(std::shared_ptr<Term>&& new_rhs) override {
         rhs_ = std::move(new_rhs);
     }
 
