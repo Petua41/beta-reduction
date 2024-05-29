@@ -14,6 +14,6 @@ jobs:
         run: |
           ./build.sh
       - name: Test
-        working-directory: ${{github.workspace}}
+        working-directory: ${{github.workspace}}/build/target
         shell: bash
         run: ./Beta-reduction_test
