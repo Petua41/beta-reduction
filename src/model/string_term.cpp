@@ -81,8 +81,8 @@ void StringTerm::Split() {
     Split();
 
     if (string_lhs_ != nullptr && string_rhs_ != nullptr) {
-        LOG(INFO) << "\tSplit version: '" << string_lhs_->data_ << "' and '"
-                  << string_rhs_->data_ << '\'';
+        LOG(INFO) << "\tSplit version: '" << string_lhs_->data_ << "' and '" << string_rhs_->data_
+                  << '\'';
     }
 
     switch (Type()) {

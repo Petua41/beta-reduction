@@ -24,10 +24,6 @@ using namespace model::term;
     auto redex_info =
             util::algorithm::DFSFindTermInfoSkipChildren(current_term_, is_redex, is_abstr);
 
-    if (redex_info.term == nullptr) {  // haven't found anything
-        no_more_redexes_ = true;
-    }
-
     return redex_info;
 }
 

@@ -1,8 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "model/enums/reduction_exit_status.h"
-#include "model/enums/reduction_strategies.h"
-#include "model/reduction_result.h"
 #include "model/terms.h"
 #include "sample_terms.h"
 #include "strategy/reducer.h"
@@ -16,17 +13,17 @@ using namespace test::sample_terms;
 
 struct ReducerTestParams {
     std::shared_ptr<Term> initial_term;
-    ReductionResult sample_result;
+    std::string sample_result;
     ReductionStrategies strat;
 
-    ReducerTestParams(std::shared_ptr<Term>&& initial_term, ReductionResult&& sample_result,
+    ReducerTestParams(std::shared_ptr<Term>&& initial_term, std::string&& sample_result,
                       ReductionStrategies strat = ReductionStrategies::NO)
         : initial_term(std::move(initial_term)),
           sample_result(std::move(sample_result)),
           strat(strat) {}
 
     ReducerTestParams(std::shared_ptr<Term> const& initial_term,
-                      ReductionResult const& sample_result,
+                      std::string const& sample_result,
                       ReductionStrategies strat = ReductionStrategies::NO)
         : initial_term(initial_term), sample_result(sample_result), strat(strat) {}
 };
@@ -40,44 +37,43 @@ TEST_P(TestReducer, DefaultTests) {
     auto strat = param.strat;
 
     ::strategy::Reducer reducer{std::move(initial_term), strat};
-    auto actual_result = reducer.MainLoop();
-
-    EXPECT_EQ(actual_result, sample_result);
+    while (true) {
+        auto [normal_form, actual_result] = reducer.Step();
+        if (normal_form) {
+            EXPECT_EQ(actual_result, sample_result);
+            return;
+        }
+    }
 }
-
-ReductionResult const kSimpleRedexResult{"y", ReductionExitStatus::NormalForm};
-ReductionResult const kAdditionResult{"(Lf.(Lx.(f (f (f (f x))))))",
-                                      ReductionExitStatus::NormalForm};
-ReductionResult const kWeakNormalFormResult{"(Lx.((Ly.y) x))", ReductionExitStatus::NormalForm};
 
 // clang-format off
 INSTANTIATE_TEST_SUITE_P(
     ReducerNormalOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, kSimpleRedexResult),
-        ReducerTestParams(k2Plus2, kAdditionResult)
+        ReducerTestParams(kSimpleRedex, "y"),
+        ReducerTestParams(k2Plus2, "(Lf.(Lx.(f (f (f (f x))))))")
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     ReducerApplicativeOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::APPL)
+        ReducerTestParams(kSimpleRedex, "y", ReductionStrategies::APPL)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     ReducerCBVTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::CBV),
+        ReducerTestParams(kSimpleRedex, "y", ReductionStrategies::CBV),
         // CBV shouldn't reduce kWeakNormalForm:
-        ReducerTestParams(kWeakNormalForm, kWeakNormalFormResult, ReductionStrategies::CBV)
+        ReducerTestParams(kWeakNormalForm, "(Lx.((Ly.y) x))", ReductionStrategies::CBV)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     ReducerCBNTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::CBN),
+        ReducerTestParams(kSimpleRedex, "y", ReductionStrategies::CBN),
         // CBN shouldn't reduce kWeakNormalForm:
-        ReducerTestParams(kWeakNormalForm, kWeakNormalFormResult, ReductionStrategies::CBN)
+        ReducerTestParams(kWeakNormalForm, "(Lx.((Ly.y) x))", ReductionStrategies::CBN)
     ));
 // clang-format on
 

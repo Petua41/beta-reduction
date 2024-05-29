@@ -19,10 +19,6 @@ using namespace model::term;
     // DFS will firstly find leftmost redex
     auto redex_info = util::algorithm::DFSFindTermInfo(current_term_, is_redex);
 
-    if (redex_info.term == nullptr) {  // didn't found anything
-        no_more_redexes_ = true;
-    }
-
     return redex_info;
 }
 

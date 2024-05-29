@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "model/enums/reduction_strategies.h"
-#include "model/reduction_result.h"
 #include "model/term.h"
 #include "strategy/strategies.h"
 
@@ -34,7 +33,7 @@ public:
         }
     }
 
-    [[nodiscard]] model::strategy::ReductionResult MainLoop() noexcept;
+    [[nodiscard]] std::pair<bool, std::string> Step() const noexcept;
 };
 
 }  // namespace strategy

@@ -123,8 +123,16 @@ int CLI::Run() {
         auto root_term = parser.Parse();
 
         strategy::Reducer reducer{std::move(root_term), strategy_};
-        auto [result_string, exit_status] = reducer.MainLoop();
-        std::cout << "Reached normal form:" << std::endl << '\t' << result_string << std::endl;
+        bool normal_form = false;
+        while (!normal_form) {
+            auto step_result = reducer.Step();
+            normal_form = step_result.first;
+            if (normal_form) {
+                std::cout << "Reached normal form:" << std::endl << step_result.second << std::endl;
+            } else {
+                std::cout << "-Beta-> " << step_result.second << std::endl;
+            }
+        }
     } catch (exceptions::FatalError const& e) {
         std::cerr << e.what();
         return EXIT_FAILURE;

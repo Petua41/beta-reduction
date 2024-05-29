@@ -24,10 +24,6 @@ using namespace model::term;
     // Find innermost leftmost:
     auto redex_info = util::algorithm::BFSFindInnermostLeftmost(std::move(levels), is_redex);
 
-    if (redex_info.term == nullptr) {  // haven't found anything
-        no_more_redexes_ = true;
-    }
-
     return redex_info;
 }
 

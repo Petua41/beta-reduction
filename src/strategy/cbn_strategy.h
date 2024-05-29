@@ -14,7 +14,6 @@ namespace strategy {
 class CBNStrategy : public IStrategy {
 private:
     std::shared_ptr<model::term::Term> current_term_;
-    bool no_more_redexes_{false};
 
 public:
     CBNStrategy(std::shared_ptr<model::term::Term>&& root) : current_term_(std::move(root)) {}
@@ -27,10 +26,6 @@ public:
 
     void SetCurrent(std::shared_ptr<model::term::Term>&& term) noexcept override {
         current_term_ = std::move(term);
-    }
-
-    [[nodiscard]] virtual bool IsInNormalForm() const noexcept override {
-        return no_more_redexes_;
     }
 };
 
