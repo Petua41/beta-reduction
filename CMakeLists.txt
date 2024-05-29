@@ -50,4 +50,5 @@ add_subdirectory("cli")
 # adding submodules
 if (COMPILE_TESTS)
     add_subdirectory("tests")
+    enable_testing()
 endif()
