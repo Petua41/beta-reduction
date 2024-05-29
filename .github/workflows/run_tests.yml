@@ -1,0 +1,17 @@
+name: CMake
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: |
+          ./build.sh
+      - name: Test
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: ./Beta-reduction_test
