@@ -36,7 +36,7 @@
 
 # Temporary directories
 build/**
-lib/**
+vendor/**
 
 # Link to compiled executables
 beta-red

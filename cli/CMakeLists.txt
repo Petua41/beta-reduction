@@ -1,6 +1,6 @@
 set(BINARY beta-red)
 
-file(GLOB_RECURSE lib_sources "*.h*" "*.cpp*")
+file(GLOB lib_sources "*.h*" "*.cpp*")
 
 add_executable(${BINARY} ${lib_sources})
 

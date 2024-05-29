@@ -40,7 +40,7 @@ find_package(Boost 1.72.0 REQUIRED COMPONENTS program_options)
 set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
 set( CMAKE_BUILD_TYPE "Release" )
 option(build_static_lib "Build easyloggingpp as a static library" ON)
-add_subdirectory("lib/easyloggingpp")
+add_subdirectory("vendor/easyloggingpp")
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
 
 add_subdirectory("src")

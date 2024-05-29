@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 # building tests
-file(GLOB_RECURSE test_sources "*.h*" "*.cpp*")
+file(GLOB test_sources "*.h*" "*.cpp*")
 add_executable(${BINARY} ${test_sources})
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 

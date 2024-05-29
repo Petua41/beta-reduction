@@ -34,8 +34,8 @@ for i in "$@"
     esac
 done
 
-mkdir -p lib
-cd lib
+mkdir -p vendor
+cd vendor
 
 if [[ ! -d "easyloggingpp" ]] ; then
   git clone https://github.com/amrayn/easyloggingpp/ --branch v9.97.0 --depth 1
