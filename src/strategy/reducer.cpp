@@ -48,8 +48,7 @@ using namespace model::strategy;
 
         auto reduced_redex = redex->BetaReductionStep();
 
-        LOG(INFO) << redex->ToString() << " -" << config::Names::Instance().Beta() << "-> "
-                  << reduced_redex->ToString();
+        LOG(INFO) << redex->ToString() << " -Beta-> " << reduced_redex->ToString();
 
         auto parent = next_redex_info.parent;
         if (parent == nullptr) {  // redex was the outermost term

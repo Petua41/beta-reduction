@@ -2,10 +2,8 @@
 
 #include <easylogging++.h>
 #include <memory>
-#include <sstream>
 #include <string>
 
-#include "config/names.h"
 #include "model/term.h"
 #include "model/variable.h"
 
@@ -42,10 +40,7 @@ public:
     }
 
     std::string ToString() const override {
-        std::stringstream sstream;
-        sstream << '(' << config::Names::Instance().Lambda() << lhs_.ToString() << '.'
-                << rhs_->ToString() << ')';
-        return sstream.str();
+        return "(L" + lhs_.ToString() + '.' + rhs_->ToString() + ')';
     }
 };
 

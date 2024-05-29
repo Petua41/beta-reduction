@@ -31,9 +31,7 @@ public:
         LOG(WARNING) << "Trying to replace rhs of '" << ToString() << "'";
     }
 
-    virtual std::string ToString() const {
-        return "<unknown term>";
-    }
+    virtual std::string ToString() const = 0;
 
     virtual bool operator==(Term const& other) const {
         return ToString() == other.ToString();

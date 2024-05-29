@@ -6,7 +6,6 @@
 
 #include "config/easylogging++_config.h"
 #include "config/misc.h"
-#include "config/names.h"
 #include "exceptions/fatal_error.h"
 #include "option_descriptions.h"
 #include "option_names.h"
@@ -44,7 +43,6 @@ void CLI::DeclareOptions() {
 
     po::options_description config{"Configuration options"};
     config.add_options()
-        (kASCII, kDASCII)
         (kMaxOp, po::value<unsigned>(), kDMaxOp)
         (kStrategy, po::value<StrategyOption>(), kDStrategy)
     ;
@@ -92,9 +90,6 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
         preprocessor_brackets_ = false;
         preprocessor_macros_ = false;
     }
-    if (vm.contains(kLongASCII)) {
-        ascii_mode_ = true;
-    }
     if (vm.contains(kLongMaxOp)) {
         max_operations_ = vm[kLongMaxOp].as<unsigned>();
     }
@@ -118,8 +113,6 @@ int CLI::Run() {
                   << "See beta-red --help" << std::endl;
         return EXIT_FAILURE;
     }
-
-    config::Names::Instance().SetASCIIMode(ascii_mode_);
 
     try {
         preprocessor::Preprocessor prep{term_, preprocessor_brackets_, preprocessor_macros_};
