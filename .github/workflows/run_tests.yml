@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Download libraries
+        uses: ./.github/composite-actions/download-libraries
       - name: Build
         working-directory: ${{github.workspace}}
         run: |
