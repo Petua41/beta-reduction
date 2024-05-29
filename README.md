@@ -60,7 +60,7 @@ Currently supported "term-to-macro" macros:
 
 ## Usage
 
-`./cli [term]` \
-Run `./cli --help` for more information
+`./beta-red [term]` \
+Run `./beta-red --help` for more information
 
 **WARNING**: Unicode input isn't currently supported. Please use `(Lx.t)` for abstraction
