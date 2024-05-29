@@ -12,33 +12,25 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/target")
 
-if (MSVC)
-    add_compile_options(/MT /MTd /EHsc)
-    add_compile_options("$<$<CONFIG:Release>:/O2>")
+# -DELPP_THREAD_SAFE -- for easylogging++ thread safety
+set(BUILD_OPTS "-DELPP_THREAD_SAFE")
 
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG  "${CMAKE_BINARY_DIR}/target")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE  "${CMAKE_BINARY_DIR}/target")
-else()
-    # -DELPP_THREAD_SAFE -- for easylogging++ thread safety
-    set(BUILD_OPTS "-DELPP_THREAD_SAFE")
+# RELEASE build options
+set(RELEASE_BUILD_OPTS "-O3")
 
-    # RELEASE build options
-    set(RELEASE_BUILD_OPTS "-O3")
+# Set common DEBUG build options
+string(JOIN ";" DEBUG_BUILD_OPTS
+    "-g"
+    "-Wall"
+    "-Wextra"
+    "-Werror"
+    "-fno-omit-frame-pointer"
+    "-fno-optimize-sibling-calls"
+    "-O0")
 
-    # Set common DEBUG build options
-    string(JOIN ";" DEBUG_BUILD_OPTS
-        "-g"
-        "-Wall"
-        "-Wextra"
-        "-Werror"
-        "-fno-omit-frame-pointer"
-        "-fno-optimize-sibling-calls"
-        "-O0")
+add_compile_options("$<$<CONFIG:Debug>:${DEBUG_BUILD_OPTS}>")
 
-    add_compile_options("$<$<CONFIG:Debug>:${DEBUG_BUILD_OPTS}>")
-
-    add_compile_options("$<$<CONFIG:Release>:${RELEASE_BUILD_OPTS}>")
-endif()
+add_compile_options("$<$<CONFIG:Release>:${RELEASE_BUILD_OPTS}>")
 
 # configuring boost
 set(Boost_USE_STATIC_LIBS OFF)
@@ -51,11 +43,6 @@ include_directories(
         "src"
         "tests"
 )
-
-# GTest
-if (COMPILE_TESTS)
-    add_subdirectory("lib/googletest")
-endif()
 
 # easylogging++
 include_directories(SYSTEM "lib/easyloggingpp/src")

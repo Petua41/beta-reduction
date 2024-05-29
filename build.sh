@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function print_help() {
 cat << EOF
 Usage: ./build.sh [options]
@@ -39,14 +41,6 @@ if [[ ! -d "easyloggingpp" ]] ; then
   git clone https://github.com/amrayn/easyloggingpp/ --branch v9.97.0 --depth 1
 fi
 
-if [[ $NO_TESTS == true ]]; then
-  PREFIX="$PREFIX -D COMPILE_TESTS=OFF"
-else
-  if [[ ! -d "googletest" ]] ; then
-    git clone https://github.com/google/googletest/ --branch v1.13.0 --depth 1
-  fi
-fi
-
 if [[ $DEBUG_MODE != true ]]; then
   PREFIX="$PREFIX -D CMAKE_BUILD_TYPE=Release"
 fi
@@ -54,7 +48,6 @@ fi
 cd ..
 mkdir -p build
 cd build
-rm CMakeCache.txt
 cmake $PREFIX .. && make $JOBS_OPTION
 
 cd ..
