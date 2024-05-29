@@ -43,7 +43,7 @@ TEST_P(TestParserException, ExceptionTests) {
     auto input = p.input_;
 
     parsing::Parser parser{input};
-    EXPECT_THROW(parser.Parse(), exceptions::ParsingError);
+    EXPECT_THROW(auto discard = parser.Parse(), exceptions::ParsingError);
 }
 
 // clang-format off

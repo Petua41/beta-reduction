@@ -38,31 +38,31 @@ void CLI::DeclareOptions() {
     // clang-format off
     po::options_description preprocessor{"Preprocessor options"};
     preprocessor.add_options()
-        (kNoBrackets, kdNoBrackets)
-        (kNoMacros, kdNoMacros)
-        (kRaw, kdRaw)
+        (kNoBrackets, kDNoBrackets)
+        (kNoMacros, kDNoMacros)
+        (kRaw, kDRaw)
     ;
 
     po::options_description postprocessor{"Postprocessor options"};
     postprocessor.add_options()
-        (kRawOutput, kdRawOutput)
+        (kRawOutput, kDRawOutput)
     ;
 
     po::options_description config{"Configuration options"};
     config.add_options()
-        (kASCII, kdASCII)
-        (kMaxOp, po::value<unsigned>(), kdMaxOp)
-        (kStrategy, po::value<StrategyOption>(), kdStrategy)
+        (kASCII, kDASCII)
+        (kMaxOp, po::value<unsigned>(), kDMaxOp)
+        (kStrategy, po::value<StrategyOption>(), kDStrategy)
     ;
 
     po::options_description generic{"Generic options"};
     generic.add_options()
-        (kHelp, kdHelp)
+        (kHelp, kDHelp)
     ;
 
     po::options_description hidden{"Hidden options"};
     hidden.add_options()
-        (kLongTerm, po::value<std::string>(), kdTerm)
+        (kLongTerm, po::value<std::string>(), kDTerm)
     ;
     // clang-format on
 

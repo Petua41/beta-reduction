@@ -46,7 +46,7 @@ TEST_P(TestPreprocessorException, ExceptionTests) {
 
     Preprocessor prep{std::move(input), true, false};
 
-    EXPECT_THROW(prep.Preprocess(), exceptions::InvalidBracketsError);
+    EXPECT_THROW(auto discard = prep.Preprocess(), exceptions::InvalidBracketsError);
 }
 
 // clang-format off

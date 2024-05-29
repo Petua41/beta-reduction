@@ -17,7 +17,7 @@ namespace config::regular_expressions {
 helper_classes::XpressiveTermTypes const kTermTypeRegexes{};
 
 // Macros:
-sregex const church_numeral_regex = +digit;
+sregex const kChurchNumeralRegex = +digit;
 
 // Reverse macros:
 helper_classes::XpressiveReverseChurchNumeral const kReverseChurchNumeralRegex{};

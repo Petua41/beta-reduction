@@ -8,7 +8,7 @@ void Preprocessor::ReplaceMacros() noexcept {
     bool found_macros = true;
     do {
         found_macros = false;
-        for (auto const& macro : all_macros) {
+        for (auto const& macro : kAllMacros) {
             auto found = macro->IsPresent(input_);
             if (found) {
                 found_macros = true;

@@ -49,43 +49,43 @@ TEST_P(TestReducer, DefaultTests) {
     EXPECT_EQ(actual_result, sample_result);
 }
 
-ReductionResult const simple_redex_result{"y", ReductionExitStatus::NormalForm};
-ReductionResult const addition_result{"(Lf.(Lx.(f (f (f (f x))))))",
+ReductionResult const kSimpleRedexResult{"y", ReductionExitStatus::NormalForm};
+ReductionResult const kAdditionResult{"(Lf.(Lx.(f (f (f (f x))))))",
                                       ReductionExitStatus::NormalForm};
-ReductionResult const appl_loop_result{"(Lx.(y ((Lz.(z z)) (Lz.(z z)))))",
-                                       ReductionExitStatus::Loop};
-ReductionResult const weak_normal_form_result{"(Lx.((Ly.y) x))", ReductionExitStatus::NormalForm};
+ReductionResult const kApplLoopResult{"(Lx.(y ((Lz.(z z)) (Lz.(z z)))))",
+                                      ReductionExitStatus::Loop};
+ReductionResult const kWeakNormalFormResult{"(Lx.((Ly.y) x))", ReductionExitStatus::NormalForm};
 
 // clang-format off
 INSTANTIATE_TEST_SUITE_P(
     ReducerNormalOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, simple_redex_result),
-        ReducerTestParams(k2Plus2, addition_result)
+        ReducerTestParams(kSimpleRedex, kSimpleRedexResult),
+        ReducerTestParams(k2Plus2, kAdditionResult)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     ReducerApplicativeOrderTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, simple_redex_result, ReductionStrategies::APPL),
+        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::APPL),
         // Applicative order should reduce Fixpoint Combinator into itself:
-        ReducerTestParams(kLoopsOnAppl, appl_loop_result, ReductionStrategies::APPL)
+        ReducerTestParams(kLoopsOnAppl, kApplLoopResult, ReductionStrategies::APPL)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     ReducerCBVTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, simple_redex_result, ReductionStrategies::CBV),
+        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::CBV),
         // CBV shouldn't reduce kWeakNormalForm:
-        ReducerTestParams(kWeakNormalForm, weak_normal_form_result, ReductionStrategies::CBV)
+        ReducerTestParams(kWeakNormalForm, kWeakNormalFormResult, ReductionStrategies::CBV)
     ));
 
 INSTANTIATE_TEST_SUITE_P(
     ReducerCBNTests, TestReducer,
     ::testing::Values(
-        ReducerTestParams(kSimpleRedex, simple_redex_result, ReductionStrategies::CBN),
+        ReducerTestParams(kSimpleRedex, kSimpleRedexResult, ReductionStrategies::CBN),
         // CBN shouldn't reduce kWeakNormalForm:
-        ReducerTestParams(kWeakNormalForm, weak_normal_form_result, ReductionStrategies::CBN)
+        ReducerTestParams(kWeakNormalForm, kWeakNormalFormResult, ReductionStrategies::CBN)
     ));
 // clang-format on
 

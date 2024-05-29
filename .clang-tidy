@@ -1,4 +1,4 @@
-Checks: '-readability-identifier-length,-misc-no-recursion,readability-identifier-naming'
+Checks: '-readability-identifier-length,-misc-no-recursion,readability-identifier-naming,cppcoreguidelines-macro-usage,-clang-diagnostic-delete-non-abstract-non-virtual-dtor,-clang-analyzer-cplusplus.NewDelete,-clang-diagnostic-delete-abstract-non-virtual-dtor'
 CheckOptions:
   - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: '1' }
   - { key: readability-identifier-naming.NamespaceCase, value: lower_case }
@@ -12,7 +12,6 @@ CheckOptions:
   - { key: readability-identifier-naming.PrivateMemberSuffix, value: _ }
   - { key: readability-identifier-naming.ProtectedMemberSuffix, value: _ }
   - { key: readability-identifier-naming.EnumConstantCase, value: CamelCase }
-  - { key: readability-identifier-naming.EnumConstantPrefix, value: k }
   - { key: readability-identifier-naming.GlobalConstantCase, value: CamelCase }
   - { key: readability-identifier-naming.GlobalConstantPrefix, value: k }
   - { key: readability-identifier-naming.MemberConstantCase, value: CamelCase }

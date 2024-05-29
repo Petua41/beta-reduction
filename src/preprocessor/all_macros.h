@@ -16,7 +16,7 @@ using namespace preprocessor::terms;
 
 namespace preprocessor {
 
-std::vector<std::shared_ptr<IMacro>> const all_macros{std::make_shared<FixpointCombinator>(),
+std::vector<std::shared_ptr<IMacro>> const kAllMacros{std::make_shared<FixpointCombinator>(),
                                                       std::make_shared<True>(),
                                                       std::make_shared<False>(),
                                                       std::make_shared<ChuchNumeral>(),

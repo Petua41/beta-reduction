@@ -8,26 +8,26 @@
 
 namespace preprocessor::terms {
 
-template <char const macro[], char const term_prefix[], char const term_inter[],
-          char const term_suffix[], bool omit_spaces = true>
-class BinaryOperatorMacro : public FixedSearchTermCapturingMacro<macro> {
+template <char const Macro[], char const TermPrefix[], char const TermInter[],
+          char const TermSuffix[], bool OmitSpaces = true>
+class BinaryOperatorMacro : public FixedSearchTermCapturingMacro<Macro> {
 public:
     [[nodiscard]] virtual std::string Replace(std::string const& str) const noexcept override {
         LOG(INFO) << "Replacing binary operator macro...";
         LOG(INFO) << "\tInitial string is '" << str << "'";
         try {
             auto [prefix, real_macro, sescond_argument, remainder_suffix] =
-                    this->template SplitByMacro<omit_spaces>(str, macro);
+                    this->template SplitByMacro<OmitSpaces>(str, Macro);
 
             auto [remainder_prefix, first_argument, real_macro2, suffix] =
-                    this->template ReverseSplitByMacro<omit_spaces>(prefix + real_macro, macro);
+                    this->template ReverseSplitByMacro<OmitSpaces>(prefix + real_macro, Macro);
 
-            LOG(INFO) << "\tResult is: '" << remainder_prefix << "', '" << term_prefix << "', '"
-                      << first_argument << "', '" << term_inter << "', '" << sescond_argument
-                      << "', '" << term_suffix << "', '" << remainder_suffix << '\'';
+            LOG(INFO) << "\tResult is: '" << remainder_prefix << "', '" << TermPrefix << "', '"
+                      << first_argument << "', '" << TermInter << "', '" << sescond_argument
+                      << "', '" << TermSuffix << "', '" << remainder_suffix << '\'';
 
-            return remainder_prefix + term_prefix + first_argument + term_inter + sescond_argument +
-                   term_suffix + remainder_suffix;
+            return remainder_prefix + TermPrefix + first_argument + TermInter + sescond_argument +
+                   TermSuffix + remainder_suffix;
         } catch (exceptions::MacroParsingError const& e) {
             // It's not a problem if we cannot parse a macro. Just don't replace it
             return str;

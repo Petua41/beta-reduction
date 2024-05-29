@@ -45,7 +45,7 @@ void StringTerm::Split() {
         }
         case Application: {
             size_t brackets_count{0};
-            size_t space_position;
+            size_t space_position{0};
             for (size_t i{1}; i < data_.size() - 1; ++i) {
                 if (data_[i] == '(') {
                     ++brackets_count;

@@ -2,16 +2,16 @@
 
 namespace cli::descriptions {
 
-constexpr auto kdNoBrackets = "don't add missing brackets";
-constexpr auto kdNoMacros = "don't replace macros with corresponding terms";
-constexpr auto kdRaw = "don't preprocess input. Combination of -b and -M";
-constexpr auto kdRawOutput =
+constexpr auto kDNoBrackets = "don't add missing brackets";
+constexpr auto kDNoMacros = "don't replace macros with corresponding terms";
+constexpr auto kDRaw = "don't preprocess input. Combination of -b and -M";
+constexpr auto kDRawOutput =
         "don't postprocess output.\n"
         "Postprocessing currently supported only in ASCII mode";
-constexpr auto kdASCII = "don't use greek letters in output (doesn't affect input)";
-constexpr auto kdMaxOp = "maximum reduction operations before exit. 0 is infinity. Default is 0";
-constexpr auto kdStrategy = "reduction strategy to use. Default is NO";
-constexpr auto kdHelp = "print this help and exit";
-constexpr auto kdTerm = "term to reduce";
+constexpr auto kDASCII = "don't use greek letters in output (doesn't affect input)";
+constexpr auto kDMaxOp = "maximum reduction operations before exit. 0 is infinity. Default is 0";
+constexpr auto kDStrategy = "reduction strategy to use. Default is NO";
+constexpr auto kDHelp = "print this help and exit";
+constexpr auto kDTerm = "term to reduce";
 
 }  // namespace cli::descriptions

@@ -15,7 +15,7 @@ namespace preprocessor::terms {
 class ChuchNumeral : public RegexWithGenerationMacro {
 protected:
     virtual boost::xpressive::sregex const& Regex() const override {
-        return config::regular_expressions::church_numeral_regex;
+        return config::regular_expressions::kChurchNumeralRegex;
     }
 
     virtual std::string GenerateTerm(std::string&& macro) const override {

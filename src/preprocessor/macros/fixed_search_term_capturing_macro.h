@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <sstream>
 #include <string>
 
 #include "exceptions/macro_parsing_error.h"
@@ -7,7 +9,7 @@
 
 namespace preprocessor::terms {
 
-template <char const macro[]>
+template <char const Macro[]>
 class FixedSearchTermCapturingMacro : public IMacro {
 protected:
     virtual std::string CaptureTerm(std::string&& str) const {
@@ -101,7 +103,7 @@ protected:
     }
 
     /// @return [remainder_prefix, real_macro, argument, remainder_suffix]
-    template <bool omit_spaces = true>
+    template <bool OmitSpaces = true>
     std::tuple<std::string, std::string, std::string, std::string> SplitByMacro(
             std::string const& str, char const macro_to_split[]) const {
         auto position = str.find(macro_to_split);
@@ -113,7 +115,7 @@ protected:
         std::string real_macro{macro_to_split};
 
         // Check space before macro:
-        if (omit_spaces && position > 0 && str[position - 1] == ' ') {
+        if (OmitSpaces && position > 0 && str[position - 1] == ' ') {
             --position;
             real_macro = ' ' + real_macro;
         }
@@ -127,7 +129,7 @@ protected:
         }
 
         // Check space after macro:
-        if (omit_spaces && str[after_end] == ' ') {
+        if (OmitSpaces && str[after_end] == ' ') {
             ++after_end;
             real_macro += ' ';
             if (after_end >= str.size()) {
@@ -148,7 +150,7 @@ protected:
     }
 
     /// @return [remainder_prefix, argument, real_macro, remainder_suffix]
-    template <bool omit_spaces = true>
+    template <bool OmitSpaces = true>
     std::tuple<std::string, std::string, std::string, std::string> ReverseSplitByMacro(
             std::string const& str, char const macro_to_split[]) const {
         auto position = str.find(macro_to_split);
@@ -160,7 +162,7 @@ protected:
         std::string real_macro{macro_to_split};
 
         // Check space before macro:
-        if (omit_spaces && position > 0 && str[position - 1] == ' ') {
+        if (OmitSpaces && position > 0 && str[position - 1] == ' ') {
             --position;
             real_macro = ' ' + real_macro;
         }
@@ -171,7 +173,7 @@ protected:
         auto after_end = position + real_macro.size();
 
         // Check space after macro:
-        if (after_end < str.size() && omit_spaces && str[after_end] == ' ') {
+        if (after_end < str.size() && OmitSpaces && str[after_end] == ' ') {
             ++after_end;
             real_macro += ' ';
         }
@@ -187,7 +189,7 @@ protected:
 
 public:
     [[nodiscard]] virtual bool IsPresent(std::string const& str) const noexcept override {
-        return str.find(macro) != std::string::npos;
+        return str.find(Macro) != std::string::npos;
     }
 };
 

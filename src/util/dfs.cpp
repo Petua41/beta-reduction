@@ -23,9 +23,9 @@ model::strategy::TermInfo DFSFindTermInfoSkipChildren(
         std::shared_ptr<model::term::Term> root,
         std::function<bool(std::shared_ptr<model::term::Term>)> pred,
         std::function<bool(std::shared_ptr<model::term::Term>)> skip_if) {
-    TermInfo root_term_info{std::move(root), nullptr, true};
+    TermInfo root_term_info{root, nullptr, true};
 
-    if (pred(root)) {
+    if (pred(std::move(root))) {
         return root_term_info;
     }
 

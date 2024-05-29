@@ -14,7 +14,7 @@ private:
 
     void FillAllMacros() noexcept {
         all_macros_ = std::make_unique<std::vector<std::shared_ptr<preprocessor::IMacro>>>();
-        for (auto macro : preprocessor::all_macros) {
+        for (auto macro : preprocessor::kAllMacros) {
             auto rev = macro->Reversed();
             if (rev != nullptr) {
                 all_macros_->push_back(std::move(rev));
