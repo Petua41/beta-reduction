@@ -57,6 +57,11 @@ void Preprocessor::CheckOutermostBrackets() noexcept {
         if (input_.find_first_of(" .") != std::string::npos) {
             input_ = '(' + input_ + ')';
         }
+    } else {
+        // Remove extra outermost brackets:
+        while (input_.starts_with("((") && input_.ends_with("))")) {
+            input_ = input_.substr(1, input_.size() - 2);
+        }
     }
 }
 

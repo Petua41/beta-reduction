@@ -15,8 +15,9 @@ The interpreter supports four β-reduction strategies:
 ### Brackets
 
 The interpreter can add missing brackets:
-* The outermost ones: `λx.t` -> `(λx.t)`
-* In the right-hand side of abstractions: `λx.t x` -> `λx.(t x)`
+* Missing outermost ones: `Lx.t` -> `(Lx.t)`
+* Extra outermost ones: `((Lx.t))` -> `(Lx.t)`
+* In the right-hand side of abstractions: `(Lx.t x)` -> `(Lx.(t x))`
 
 ### Macros
 
@@ -62,5 +63,3 @@ Currently supported "term-to-macro" macros:
 
 `./beta-red [term]` \
 Run `./beta-red --help` for more information
-
-**WARNING**: Unicode input isn't currently supported. Please use `(Lx.t)` for abstraction
