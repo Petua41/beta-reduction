@@ -7,7 +7,7 @@
 
 namespace preprocessor::terms {
 
-template <char const* Macro, char const* Term, bool HasReversed = true>
+template <char const* Macro, char const* Term>
 class FixedStringMacro : public IMacro {
 private:
     std::string name_;
@@ -24,14 +24,6 @@ public:
         auto pos = str.find(name_);
         auto& str_copy = const_cast<std::string&>(str);
         return str_copy.replace(pos, name_.size(), term_);
-    }
-
-    [[nodiscard]] std::shared_ptr<IMacro> Reversed() const noexcept override {
-        if (HasReversed) {
-            return std::make_shared<FixedStringMacro<Term, Macro>>();
-        }
-
-        return nullptr;
     }
 };
 

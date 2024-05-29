@@ -11,7 +11,6 @@
 #include "option_descriptions.h"
 #include "option_names.h"
 #include "parser/parser.h"
-#include "postprocessor/postprocessor.h"
 #include "preprocessor/preprocessor.h"
 #include "strategy/reducer.h"
 
@@ -43,11 +42,6 @@ void CLI::DeclareOptions() {
         (kRaw, kDRaw)
     ;
 
-    po::options_description postprocessor{"Postprocessor options"};
-    postprocessor.add_options()
-        (kRawOutput, kDRawOutput)
-    ;
-
     po::options_description config{"Configuration options"};
     config.add_options()
         (kASCII, kDASCII)
@@ -70,7 +64,7 @@ void CLI::DeclareOptions() {
     p_desc_.add(kLongTerm, -1);
 
     // Add option groups to description objects:
-    visible_desc_.add(preprocessor).add(postprocessor).add(config).add(generic);
+    visible_desc_.add(preprocessor).add(config).add(generic);
     desc_.add(visible_desc_).add(hidden);
 }
 
@@ -97,9 +91,6 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
     if (vm.contains(kLongRaw)) {
         preprocessor_brackets_ = false;
         preprocessor_macros_ = false;
-    }
-    if (vm.contains(kLongRawOutput)) {
-        postprocessor_macros_ = false;
     }
     if (vm.contains(kLongASCII)) {
         ascii_mode_ = true;
@@ -158,12 +149,6 @@ int CLI::Run() {
                           << "). The last term was:" << std::endl
                           << '\t' << result_string << std::endl;
                 break;
-        }
-
-        postprocessor::Postprocessor postp{result_string, postprocessor_macros_};
-        auto postprocessed_result = postp.Process();
-        if (postprocessed_result != result_string) {
-            std::cout << "Which is:" << std::endl << '\t' << postprocessed_result << std::endl;
         }
     } catch (exceptions::FatalError const& e) {
         std::cerr << e.what();
