@@ -22,8 +22,7 @@ struct ReducerTestParams {
           sample_result(std::move(sample_result)),
           strat(strat) {}
 
-    ReducerTestParams(std::shared_ptr<Term> const& initial_term,
-                      std::string const& sample_result,
+    ReducerTestParams(std::shared_ptr<Term> const& initial_term, std::string const& sample_result,
                       ReductionStrategies strat = ReductionStrategies::NO)
         : initial_term(initial_term), sample_result(sample_result), strat(strat) {}
 };

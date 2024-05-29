@@ -1,39 +1,43 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include "model/enums/reduction_strategies.h"
 #include "model/term.h"
+#include "model/term_info.h"
 #include "strategy/strategies.h"
 
 namespace strategy {
 
 class Reducer {
 private:
-    std::unique_ptr<IStrategy> strategy_;
+    std::shared_ptr<model::term::Term> current_term_;
+    std::function<model::strategy::TermInfo(std::shared_ptr<model::term::Term>)> select_next_;
 
 public:
     Reducer(std::shared_ptr<model::term::Term>&& root,
-            model::ReductionStrategies strat = model::ReductionStrategies::NO) {
+            model::ReductionStrategies strat = model::ReductionStrategies::NO)
+        : current_term_(std::move(root)) {
         using enum model::ReductionStrategies;
 
         switch (strat) {
             case NO:
-                strategy_ = std::make_unique<NOStrategy>(std::move(root));
+                select_next_ = &NOSelectNext;
                 break;
             case APPL:
-                strategy_ = std::make_unique<APPLStrategy>(std::move(root));
-                break;
-            case CBV:
-                strategy_ = std::make_unique<CBVStrategy>(std::move(root));
+                select_next_ = &APPLSelectNext;
                 break;
             case CBN:
-                strategy_ = std::make_unique<CBNStrategy>(std::move(root));
+                select_next_ = &CBNSelectNext;
+                break;
+            case CBV:
+                select_next_ = &CBVSelectNext;
                 break;
         }
     }
 
-    [[nodiscard]] std::pair<bool, std::string> Step() const noexcept;
+    [[nodiscard]] std::pair<bool, std::string> Step() noexcept;
 };
 
 }  // namespace strategy

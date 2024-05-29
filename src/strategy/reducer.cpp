@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "model/application.h"
-#include "strategy/i_strategy.h"
 
 namespace strategy {
 
@@ -12,13 +11,13 @@ using namespace model;
 using namespace model::term;
 using namespace model::strategy;
 
-[[nodiscard]] std::pair<bool, std::string> Reducer::Step() const noexcept {
-    auto next_redex_info = strategy_->SelectNext();
+[[nodiscard]] std::pair<bool, std::string> Reducer::Step() noexcept {
+    auto next_redex_info = select_next_(current_term_);
 
     auto pre_redex = next_redex_info.term;
     if (pre_redex == nullptr) {
         // No more redexes
-        return std::make_pair(true, strategy_->CurrentString());
+        return std::make_pair(true, current_term_->ToString());
     }
 
     auto redex = dynamic_cast<Application*>(pre_redex.get());
@@ -26,12 +25,12 @@ using namespace model::strategy;
 
     auto reduced_redex = redex->BetaReductionStep();
 
-    auto old_term = strategy_->CurrentString();
+    auto old_term = current_term_->ToString();
 
     auto parent = next_redex_info.parent;
     if (parent == nullptr) {
         // Redex was the outermost term
-        strategy_->SetCurrent(std::move(reduced_redex));
+        current_term_ = std::move(reduced_redex);
     } else {
         if (next_redex_info.in_lhs) {
             parent->Lhs(std::move(reduced_redex));
@@ -40,7 +39,7 @@ using namespace model::strategy;
         }
     }
 
-    return std::make_pair(false, strategy_->CurrentString());
+    return std::make_pair(false, current_term_->ToString());
 }
 
 }  // namespace strategy
