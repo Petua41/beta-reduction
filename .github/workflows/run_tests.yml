@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build
+        working-directory: ${{github.workspace}}
         run: |
           ./build.sh
       - name: Test
