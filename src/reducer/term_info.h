@@ -5,7 +5,7 @@
 
 #include "model/term.h"
 
-namespace strategy {
+namespace reducer {
 
 struct TermInfo {
 public:
@@ -46,11 +46,11 @@ inline std::ostream& operator<<(std::ostream& os, TermInfo const& ti) {
     return os;
 }
 
-}  // namespace model::strategy
+}  // namespace reducer
 
 template <>
-struct std::hash<strategy::TermInfo> {
-    std::size_t operator()(strategy::TermInfo const& ri) const noexcept {
+struct std::hash<reducer::TermInfo> {
+    std::size_t operator()(reducer::TermInfo const& ri) const noexcept {
         auto h1 = std::hash<std::shared_ptr<model::term::Term>>{}(ri.term);
         auto h2 = std::hash<std::shared_ptr<model::term::Term>>{}(ri.parent);
         auto h3 = std::hash<bool>{}(ri.in_lhs);

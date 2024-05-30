@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "model/term.h"
+#include "reducer/reducer.h"
 #include "sample_terms.h"
-#include "strategy/reducer.h"
 
 namespace tests {
 
@@ -34,7 +34,7 @@ TEST_P(TestReducer, DefaultTests) {
     auto sample_result = param.sample_result;
     auto strat = param.strat;
 
-    ::strategy::Reducer reducer{std::move(initial_term), strat};
+    reducer::Reducer reducer{std::move(initial_term), strat};
     while (true) {
         auto [normal_form, actual_result] = reducer.Step();
         if (normal_form) {

@@ -9,7 +9,7 @@
 #include "names.h"
 #include "parser/string_term.h"
 #include "preprocessor/preprocessor.h"
-#include "strategy/reducer.h"
+#include "reducer/reducer.h"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -118,7 +118,7 @@ int CLI::Run() {
         parsing::StringTerm string_term_root{std::move(preprocessed_input)};
         auto root_term = string_term_root.Parse();
 
-        strategy::Reducer reducer{std::move(root_term), strategy_};
+        reducer::Reducer reducer{std::move(root_term), strategy_};
         bool normal_form = false;
         while (!normal_form) {
             auto step_result = reducer.Step();

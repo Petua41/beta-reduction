@@ -1,11 +1,11 @@
-#include "strategy/reducer.h"
+#include "reducer/reducer.h"
 
 #include <easylogging++.h>
 #include <memory>
 
 #include "model/application.h"
 
-namespace strategy {
+namespace reducer {
 
 using namespace model::term;
 
@@ -19,11 +19,9 @@ using namespace model::term;
     }
 
     auto redex = dynamic_cast<Application*>(pre_redex.get());
-    assert(redex != nullptr);  // strategy must return only Applications as redexes
+    assert(redex != nullptr);  // strategy must select only Applications as redexes
 
     auto reduced_redex = redex->BetaReductionStep();
-
-    auto old_term = current_term_->ToString();
 
     auto parent = next_redex_info.parent;
     if (parent == nullptr) {
@@ -40,4 +38,4 @@ using namespace model::term;
     return std::make_pair(false, current_term_->ToString());
 }
 
-}  // namespace strategy
+}  // namespace reducer
