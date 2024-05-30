@@ -51,15 +51,14 @@ Currently supported "term-to-macro" macros:
 ### To compile interpreter, run  
 `git clone https://github.com/Petua41/beta-reduction` \
 `cd beta-reduction` \
-`./build.sh -n -jN`, where N is number of simultaneous jobs
+`mkdir build && cd build` \
+`cmake .. && make -jN`, where N is number of simultaneous jobs
 
-### To compile and run tests, run
-`git clone https://github.com/Petua41/beta-reduction` \
-`cd beta-reduction` \
-`./build.sh -jN`, where N is number of simultaneous jobs \
-`./Beta-reduction_test`
+### To run tests, run
+`build/target/Beta-reduction_test` or `cd build && ctest`
 
 ## Usage
 
+`cd build/target`
 `./beta-red [term]` \
 Run `./beta-red --help` for more information

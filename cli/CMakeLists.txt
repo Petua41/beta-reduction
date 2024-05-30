@@ -1,5 +1,7 @@
 set(BINARY beta-red)
 
+enable_testing()
+
 file(GLOB lib_sources "*.h*" "*.cpp*")
 
 add_executable(${BINARY} ${lib_sources})
