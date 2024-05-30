@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "model/terms.h"
+#include "model/term.h"
 #include "sample_terms.h"
 #include "strategy/reducer.h"
 
@@ -8,7 +8,6 @@ namespace tests {
 
 using namespace model;
 using namespace model::term;
-using namespace model::strategy;
 using namespace test::sample_terms;
 
 struct ReducerTestParams {

@@ -5,15 +5,15 @@
 
 #include "model/enums/reduction_strategies.h"
 #include "model/term.h"
-#include "model/term_info.h"
 #include "strategy/strategies.h"
+#include "strategy/term_info.h"
 
 namespace strategy {
 
 class Reducer {
 private:
     std::shared_ptr<model::term::Term> current_term_;
-    std::function<model::strategy::TermInfo(std::shared_ptr<model::term::Term>)> select_next_;
+    std::function<TermInfo(std::shared_ptr<model::term::Term>)> select_next_;
 
 public:
     Reducer(std::shared_ptr<model::term::Term>&& root,

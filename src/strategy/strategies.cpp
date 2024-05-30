@@ -2,14 +2,15 @@
 
 #include <memory>
 
+#include "model/abstraction.h"
+#include "model/application.h"
 #include "model/term.h"
-#include "model/term_info.h"
+#include "strategy/term_info.h"
 #include "util/bfs.h"
 #include "util/dfs.h"
 
 namespace strategy {
 
-using namespace model::strategy;
 using namespace model::term;
 using namespace util::algorithm;
 

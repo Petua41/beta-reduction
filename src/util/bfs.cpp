@@ -7,13 +7,13 @@
 #include <unordered_set>
 #include <vector>
 
-#include "model/term_info.h"
 #include "model/terms.h"
+#include "strategy/term_info.h"
 
 namespace util::algorithm {
 
 using namespace model::term;
-using namespace model::strategy;
+using namespace strategy;
 
 std::stack<std::vector<TermInfo>> BFSSplitByLevels(std::shared_ptr<Term> root) {
     return BFSSplitByLevelsSkipChildren(
@@ -75,7 +75,7 @@ std::stack<std::vector<TermInfo>> BFSSplitByLevelsSkipChildren(
     return levels;
 }
 
-TermInfo BFSFindInnermostLeftmost(std::stack<std::vector<model::strategy::TermInfo>> levels,
+TermInfo BFSFindInnermostLeftmost(std::stack<std::vector<TermInfo>> levels,
                                   std::function<bool(std::shared_ptr<Term>)> pred) {
     // Go from bottom to top:
     while (!levels.empty()) {

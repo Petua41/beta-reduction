@@ -3,20 +3,18 @@
 #include <memory>
 #include <ostream>
 
-#include "model/application.h"
 #include "model/term.h"
 
-namespace model::strategy {
-
-using namespace model::term;
+namespace strategy {
 
 struct TermInfo {
 public:
-    std::shared_ptr<Term> term;
-    std::shared_ptr<Term> parent;
+    std::shared_ptr<model::term::Term> term;
+    std::shared_ptr<model::term::Term> parent;
     bool in_lhs;  // otherwise, in rhs
 
-    TermInfo(std::shared_ptr<Term> term, std::shared_ptr<Term> parent, bool in_lhs)
+    TermInfo(std::shared_ptr<model::term::Term> term,
+              std::shared_ptr<model::term::Term> parent, bool in_lhs)
         : term(std::move(term)), parent(std::move(parent)), in_lhs(in_lhs) {}
 
     bool operator==(TermInfo const& other) const {
@@ -33,7 +31,7 @@ inline std::ostream& operator<<(std::ostream& os, TermInfo const& ti) {
     os << '[';
 
     if (ti.term == nullptr) {
-        os << "Empty TermInfo";
+        os << "Empty RedexInfo";
     } else {
         os << ti.term->ToString();
 
@@ -51,8 +49,8 @@ inline std::ostream& operator<<(std::ostream& os, TermInfo const& ti) {
 }  // namespace model::strategy
 
 template <>
-struct std::hash<model::strategy::TermInfo> {
-    std::size_t operator()(model::strategy::TermInfo const& ri) const noexcept {
+struct std::hash<strategy::TermInfo> {
+    std::size_t operator()(strategy::TermInfo const& ri) const noexcept {
         auto h1 = std::hash<std::shared_ptr<model::term::Term>>{}(ri.term);
         auto h2 = std::hash<std::shared_ptr<model::term::Term>>{}(ri.parent);
         auto h3 = std::hash<bool>{}(ri.in_lhs);

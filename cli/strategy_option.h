@@ -14,9 +14,8 @@ struct StrategyOption {
 public:
     model::ReductionStrategies strategy_;
 
-    StrategyOption() : strategy_(model::ReductionStrategies::NO) {}
-
-    StrategyOption(model::ReductionStrategies strategy) : strategy_(strategy) {}
+    StrategyOption(model::ReductionStrategies strategy = model::ReductionStrategies::NO)
+        : strategy_(strategy) {}
 };
 
 void validate(boost::any& v, std::vector<std::string> const& values,

@@ -4,13 +4,13 @@
 #include <stack>
 #include <unordered_set>
 
-#include "model/term_info.h"
 #include "model/terms.h"
+#include "strategy/term_info.h"
 
 namespace util::algorithm {
 
 using namespace model::term;
-using namespace model::strategy;
+using namespace strategy;
 
 TermInfo DFSFindTermInfo(std::shared_ptr<Term> root,
                          std::function<bool(std::shared_ptr<Term>)> pred) {
@@ -19,7 +19,7 @@ TermInfo DFSFindTermInfo(std::shared_ptr<Term> root,
             [](auto param __attribute__((__unused__))) { return false; });
 }
 
-model::strategy::TermInfo DFSFindTermInfoSkipChildren(
+TermInfo DFSFindTermInfoSkipChildren(
         std::shared_ptr<model::term::Term> root,
         std::function<bool(std::shared_ptr<model::term::Term>)> pred,
         std::function<bool(std::shared_ptr<model::term::Term>)> skip_if) {

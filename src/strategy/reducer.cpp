@@ -7,9 +7,7 @@
 
 namespace strategy {
 
-using namespace model;
 using namespace model::term;
-using namespace model::strategy;
 
 [[nodiscard]] std::pair<bool, std::string> Reducer::Step() noexcept {
     auto next_redex_info = select_next_(current_term_);

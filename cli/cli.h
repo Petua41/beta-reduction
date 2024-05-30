@@ -22,7 +22,6 @@ private:
     // Paramemeters (with default values):
     bool preprocessor_brackets_{true};
     bool preprocessor_macros_{true};
-    bool postprocessor_macros_{true};
     model::ReductionStrategies strategy_{model::ReductionStrategies::NO};
     std::string term_{""};
 

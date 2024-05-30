@@ -2,15 +2,14 @@
 
 #include <memory>
 
-#include "model/term_info.h"
 #include "model/terms.h"
+#include "strategy/term_info.h"
 
 namespace util::algorithm {
 
-model::strategy::TermInfo DFSFindTermInfo(
-        std::shared_ptr<model::term::Term> root,
-        std::function<bool(std::shared_ptr<model::term::Term>)> pred);
-model::strategy::TermInfo DFSFindTermInfoSkipChildren(
+strategy::TermInfo DFSFindTermInfo(std::shared_ptr<model::term::Term> root,
+                                   std::function<bool(std::shared_ptr<model::term::Term>)> pred);
+strategy::TermInfo DFSFindTermInfoSkipChildren(
         std::shared_ptr<model::term::Term> root,
         std::function<bool(std::shared_ptr<model::term::Term>)> pred,
         std::function<bool(std::shared_ptr<model::term::Term>)> skip_if);
