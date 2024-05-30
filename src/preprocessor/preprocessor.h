@@ -1,14 +1,19 @@
 #pragma once
 
+#include <memory>
 #include <string>
+#include <vector>
 
 #include "exceptions/invalid_brackets_error.h"
 #include "model/enums/brackets_problems.h"
+#include "preprocessor/i_macro.h"
 
 namespace preprocessor {
 
 class Preprocessor {
 private:
+    static std::vector<std::shared_ptr<IMacro>> const all_macros_;
+
     std::string input_;
 
     // Actions to perform:

@@ -1,14 +1,29 @@
 #include "preprocessor/preprocessor.h"
 
-#include "preprocessor/all_macros.h"
+#include "preprocessor/macros/church_numeral.h"
+#include "preprocessor/macros/fixed_strings.h"
 
 namespace preprocessor {
+
+using namespace preprocessor::terms;
+
+std::vector<std::shared_ptr<IMacro>> const Preprocessor::all_macros_{
+        std::make_shared<FixpointCombinator>(),
+        std::make_shared<True>(),
+        std::make_shared<False>(),
+        std::make_shared<ChuchNumeral>(),
+        std::make_shared<Not>(),
+        std::make_shared<IsZero>(),
+        std::make_shared<Plus>(),
+        std::make_shared<Mult>(),
+        std::make_shared<And>(),
+        std::make_shared<Or>()};
 
 void Preprocessor::ReplaceMacros() noexcept {
     bool found_macros = true;
     do {
         found_macros = false;
-        for (auto const& macro : kAllMacros) {
+        for (auto const& macro : all_macros_) {
             auto found = macro->IsPresent(input_);
             if (found) {
                 found_macros = true;
