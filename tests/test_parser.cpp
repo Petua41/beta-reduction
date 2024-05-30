@@ -4,7 +4,7 @@
 
 #include "exceptions/parsing_error.h"
 #include "model/terms.h"
-#include "parser/parser.h"
+#include "parser/string_term.h"
 #include "sample_terms.h"
 
 namespace tests {
@@ -30,8 +30,8 @@ TEST_P(TestParser, DefaultTests) {
     auto& input = p.input_;
     auto& sample_term = p.sample_term_;
 
-    parsing::Parser parser{input};
-    auto actual_term = parser.Parse();
+    parsing::StringTerm string_root{input};
+    auto actual_term = string_root.Parse();
 
     EXPECT_EQ(*sample_term, *actual_term);
 }
@@ -42,8 +42,8 @@ TEST_P(TestParserException, ExceptionTests) {
     auto const& p = GetParam();
     auto input = p.input_;
 
-    parsing::Parser parser{input};
-    EXPECT_THROW(auto discard = parser.Parse(), exceptions::ParsingError);
+    parsing::StringTerm string_root{input};
+    EXPECT_THROW(auto discard = string_root.Parse(), exceptions::ParsingError);
 }
 
 // clang-format off
@@ -55,11 +55,6 @@ INSTANTIATE_TEST_SUITE_P(
         ParserTestParams("x", std::make_shared<model::term::Variable>("x")),
         // Variable with multi-character name:
         ParserTestParams("abc", std::make_shared<model::term::Variable>("abc")),
-// Unicode input isn't currently supported:
-#if 0
-        // Abstraction (Unicode):
-        ParserTestParams("(λx.x)", kSimpleAbstraction),
-#endif
         // Abstraction (ASCII):
         ParserTestParams("(Lx.x)", kSimpleAbstraction),
         // Application:

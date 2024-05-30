@@ -5,11 +5,9 @@
 #include <iostream>
 
 #include "config/easylogging++_config.h"
-#include "config/misc.h"
 #include "exceptions/fatal_error.h"
-#include "option_descriptions.h"
-#include "option_names.h"
-#include "parser/parser.h"
+#include "names.h"
+#include "parser/string_term.h"
 #include "preprocessor/preprocessor.h"
 #include "strategy/reducer.h"
 
@@ -28,8 +26,6 @@ int main(int argc, char* argv[]) {
 namespace cli {
 
 namespace po = boost::program_options;
-using namespace names;
-using namespace descriptions;
 
 void CLI::DeclareOptions() {
     // Declare option groups:
@@ -99,7 +95,7 @@ void CLI::ParseCommandLineArguments(int argc, char* argv[]) {
 }
 
 void CLI::PrintHelpAndExit() {
-    std::cout << config::misc::kGlobalHelpPrefix << visible_desc_ << std::endl;
+    std::cout << kGlobalHelpPrefix << visible_desc_ << std::endl;
     exit(EXIT_SUCCESS);
 }
 
@@ -119,8 +115,8 @@ int CLI::Run() {
                       << '\t' << preprocessed_input << std::endl;
         }
 
-        parsing::Parser parser{preprocessed_input};
-        auto root_term = parser.Parse();
+        parsing::StringTerm string_term_root{std::move(preprocessed_input)};
+        auto root_term = string_term_root.Parse();
 
         strategy::Reducer reducer{std::move(root_term), strategy_};
         bool normal_form = false;
