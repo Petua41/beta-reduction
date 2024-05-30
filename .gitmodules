@@ -1,0 +1,3 @@
+[submodule "vendor/easyloggingpp"]
+	path = vendor/easyloggingpp
+	url = https://github.com/amrayn/easyloggingpp/

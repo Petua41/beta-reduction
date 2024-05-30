@@ -34,18 +34,15 @@ for i in "$@"
     esac
 done
 
-mkdir -p vendor
-cd vendor
 
-if [[ ! -d "easyloggingpp" ]] ; then
-  git clone https://github.com/amrayn/easyloggingpp/ --branch v9.97.0 --depth 1
+if [[ ! -d "vendor/easyloggingpp/src" ]] ; then
+  git submodule update --init --recursive
 fi
 
 if [[ $DEBUG_MODE != true ]]; then
   PREFIX="$PREFIX -D CMAKE_BUILD_TYPE=Release"
 fi
 
-cd ..
 mkdir -p build
 cd build
 cmake $PREFIX .. && make $JOBS_OPTION
