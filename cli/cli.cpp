@@ -3,6 +3,7 @@
 #include <boost/program_options.hpp>
 #include <easylogging++.h>
 #include <iostream>
+#include <sstream>
 
 #include "config/easylogging++_config.h"
 #include "exceptions/fatal_error.h"
@@ -117,6 +118,20 @@ int CLI::Run() {
 
         parsing::StringTerm string_term_root{std::move(preprocessed_input)};
         auto root_term = string_term_root.Parse();
+
+        auto free_variables = root_term->GetFreeVariables();
+        if (free_variables.size() > 0) {
+            std::stringstream sstream;
+            sstream << "Free variables: ";
+            for (auto const& free_var : free_variables) {
+                sstream << free_var << ' ';
+            }
+            LOG(INFO) << sstream.str();
+
+            root_term->ReplaceBoundVariables(free_variables);
+
+            std::cout << "-Alpha-> " << root_term->ToString() << std::endl;
+        }
 
         reducer::Reducer reducer{std::move(root_term), strategy_};
         bool normal_form = false;

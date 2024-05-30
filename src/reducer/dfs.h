@@ -1,11 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <unordered_set>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
-#include "model/terms.h"
+#include "model/term.h"
 #include "reducer/term_info.h"
 
 namespace reducer::algorithm {

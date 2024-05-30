@@ -61,9 +61,7 @@ INSTANTIATE_TEST_SUITE_P(
         // OK (Abstraction's rhs is a single Variable):
         PreprocessorTestParams("(Lx.x)", "(Lx.x)", true, false),
         // A bit more complex case:
-        PreprocessorTestParams("(Lx.A Ly.B C)", "(Lx.(A Ly.(B C)))", true, false),
-        // Extra outermost brackets:
-        PreprocessorTestParams("((Lx.x))", "(Lx.x)", true, false)
+        PreprocessorTestParams("(Lx.A Ly.B C)", "(Lx.(A Ly.(B C)))", true, false)
     ));
 
 INSTANTIATE_TEST_SUITE_P(

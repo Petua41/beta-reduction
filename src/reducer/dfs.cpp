@@ -4,7 +4,9 @@
 #include <stack>
 #include <unordered_set>
 
-#include "model/terms.h"
+#include "model/abstraction.h"
+#include "model/application.h"
+#include "model/term.h"
 #include "reducer/term_info.h"
 
 namespace reducer::algorithm {

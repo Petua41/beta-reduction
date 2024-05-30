@@ -6,7 +6,10 @@
 
 #include "config/regular_expressions.h"
 #include "exceptions/parsing_error.h"
-#include "model/terms.h"
+#include "model/abstraction.h"
+#include "model/application.h"
+#include "model/term.h"
+#include "model/variable.h"
 
 namespace parsing {
 

@@ -3,6 +3,7 @@
 #include <easylogging++.h>
 #include <memory>
 #include <string>
+#include <unordered_set>
 
 namespace model::term {
 
@@ -31,6 +32,10 @@ public:
         LOG(WARNING) << "Trying to replace rhs of '" << ToString() << "'";
     }
 
+    virtual std::unordered_set<std::string> GetFreeVariables() const noexcept = 0;
+    virtual void ReplaceBoundVariables(std::unordered_set<std::string> const& for_replacement) = 0;
+    virtual void ReplaceFreeVariable(std::string const& for_replacement,
+                                     std::string const& new_name) = 0;
     virtual std::string ToString() const = 0;
 
     virtual bool operator==(Term const& other) const {

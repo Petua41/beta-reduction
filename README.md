@@ -16,7 +16,6 @@ The interpreter supports four β-reduction strategies:
 
 The interpreter can add missing brackets:
 * Missing outermost ones: `Lx.t` -> `(Lx.t)`
-* Extra outermost ones: `((Lx.t))` -> `(Lx.t)`
 * In the right-hand side of abstractions: `(Lx.t x)` -> `(Lx.(t x))`
 
 ### Macros

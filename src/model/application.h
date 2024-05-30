@@ -4,6 +4,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 
 #include "model/abstraction.h"
 #include "model/term.h"
@@ -40,6 +41,27 @@ public:
 
     void Rhs(std::shared_ptr<Term>&& new_rhs) override {
         rhs_ = std::move(new_rhs);
+    }
+
+    std::unordered_set<std::string> GetFreeVariables() const noexcept {
+        // In terms of single Application, free variables are {lhs} \cap {rhs}
+        auto lhs_free_vars = lhs_->GetFreeVariables();
+        auto rhs_free_vars = rhs_->GetFreeVariables();
+        lhs_free_vars.merge(std::move(rhs_free_vars));
+        return lhs_free_vars;
+    }
+
+    void ReplaceBoundVariables(std::unordered_set<std::string> const& for_replacement) override {
+        // Application cannot decide if variable is bound, so just pass this query
+        lhs_->ReplaceBoundVariables(for_replacement);
+        rhs_->ReplaceBoundVariables(for_replacement);
+    }
+
+    void ReplaceFreeVariable(std::string const& for_replacement,
+                             std::string const& new_name) override {
+        // Application cannot decide if variable is free, so just pass this query
+        lhs_->ReplaceFreeVariable(for_replacement, new_name);
+        rhs_->ReplaceFreeVariable(for_replacement, new_name);
     }
 
     std::shared_ptr<Term> BetaReductionStep() {

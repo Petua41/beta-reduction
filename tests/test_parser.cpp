@@ -3,7 +3,8 @@
 #include <gtest/gtest.h>
 
 #include "exceptions/parsing_error.h"
-#include "model/terms.h"
+#include "model/term.h"
+#include "model/variable.h"
 #include "parser/string_term.h"
 #include "sample_terms.h"
 
@@ -52,9 +53,9 @@ INSTANTIATE_TEST_SUITE_P(
     ParserSimpleTermsTests, TestParser,
     ::testing::Values(
         // Variable with one-character name:
-        ParserTestParams("x", std::make_shared<model::term::Variable>("x")),
+        ParserTestParams("x", std::make_shared<Variable>("x")),
         // Variable with multi-character name:
-        ParserTestParams("abc", std::make_shared<model::term::Variable>("abc")),
+        ParserTestParams("abc", std::make_shared<Variable>("abc")),
         // Abstraction (ASCII):
         ParserTestParams("(Lx.x)", kSimpleAbstraction),
         // Application:

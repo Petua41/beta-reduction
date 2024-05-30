@@ -3,11 +3,14 @@
 #include <easylogging++.h>
 #include <memory>
 #include <string>
+#include <unordered_set>
 
 #include "model/term.h"
 #include "model/variable.h"
 
 namespace model::term {
+
+static size_t var_number{0};
 
 class Abstraction : public Term {
 private:
@@ -29,6 +32,38 @@ public:
 
     std::shared_ptr<Term> Rhs() const override {
         return rhs_;
+    }
+
+    std::unordered_set<std::string> GetFreeVariables() const noexcept {
+        // In terms of a single Abstraction, free variables are {rhs} \ {lhs}
+        auto rhs_free_vars = rhs_->GetFreeVariables();
+        auto it = rhs_free_vars.find(VariableName());
+
+        if (it != rhs_free_vars.end()) {
+            rhs_free_vars.erase(it);
+        }
+        return rhs_free_vars;
+    }
+
+    void ReplaceBoundVariables(std::unordered_set<std::string> const& for_replacement) override {
+        auto const& lhs_name = VariableName();
+        if (for_replacement.find(lhs_name) != for_replacement.end()) {
+            // This variable is bound for this Abstraction
+            std::string new_name = 'x' + std::to_string(var_number++);
+            lhs_ = Variable{new_name};
+            rhs_->ReplaceFreeVariable(lhs_name, new_name);
+        }
+        // Pass this query:
+        rhs_->ReplaceBoundVariables(for_replacement);
+    }
+
+    void ReplaceFreeVariable(std::string const& for_replacement,
+                             std::string const& new_name) override {
+        auto const& lhs_name = VariableName();
+        if (lhs_name != for_replacement) {
+            // This variable is free for this Abstraction
+            rhs_->ReplaceFreeVariable(lhs_name, new_name);
+        }
     }
 
     std::string VariableName() const {
