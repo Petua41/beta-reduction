@@ -16,7 +16,7 @@ jobs:
         run: |
           mkdir -p build
           cd build
-          cmake
+          cmake ..
           make
       - name: Test
         working-directory: ${{github.workspace}}/build/target
