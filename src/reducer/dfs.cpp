@@ -110,7 +110,7 @@ size_t RecursiveDFS(TermInfo&& parent, std::unordered_set<TermInfo>& visited,
 
     visited.insert(parent);
 
-    auto level = std::max(rhs_level, rhs_level) + 1;
+    auto level = std::max(lhs_level, rhs_level) + 1;
 
     if (levels.find(level) == levels.end()) {
         levels.emplace(level, std::vector<TermInfo>{});
@@ -146,7 +146,7 @@ size_t WeakRecursiveDFS(TermInfo&& parent, std::unordered_set<TermInfo>& visited
 
     visited.insert(parent);
 
-    auto level = std::max(rhs_level, rhs_level) + 1;
+    auto level = std::max(lhs_level, rhs_level) + 1;
 
     if (!skip) {
         if (levels.find(level) == levels.end()) {

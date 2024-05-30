@@ -21,7 +21,7 @@ The interpreter can add missing brackets:
 ### Macros
 
 The interpreter can process macros (i. e. named terms) \
-Currently supported "macro-to-term" macros:
+Currently supported macros:
 - Boolean values:
     - `true`
     - `false`
@@ -39,11 +39,6 @@ Currently supported "macro-to-term" macros:
         - Arithmetic:
             - Addition (typed as `+`)
             - Multiplication (typed as `*`)
-
-Currently supported "term-to-macro" macros:
-- Boolean values:
-    - `true` (false isn't supported, because it's term is the same as the 0's one)
-- Church numerals
 
 ## Installation
 

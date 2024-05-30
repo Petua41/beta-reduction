@@ -29,7 +29,8 @@ public:
         return std::unordered_set<std::string>{name_};
     }
 
-    void ReplaceBoundVariables(std::unordered_set<std::string> const& for_replacement) override {
+    void ReplaceBoundVariables(std::unordered_set<std::string> const& for_replacement
+                               __attribute__((__unused__))) override {
         // A single Variable is never bound
     }
 
