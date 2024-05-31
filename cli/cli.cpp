@@ -108,15 +108,21 @@ int CLI::Run() {
     }
 
     try {
-        preprocessor::Preprocessor prep{term_, preprocessor_brackets_, preprocessor_macros_};
-        auto preprocessed_input = prep.Preprocess();
-
-        if (preprocessed_input != term_) {
-            std::cout << "Checked brackets and replaced macros: " << std::endl
-                      << '\t' << preprocessed_input << std::endl;
+        std::string preprocessed{term_};
+        if (preprocessor_brackets_) {
+            preprocessed = preprocessor::CheckBrackets(preprocessed);
+            if (preprocessed != term_) [[likely]] {
+                std::cout << "Checked brackets: " << std::endl << '\t' << preprocessed << std::endl;
+            }
+        }
+        if (preprocessor_macros_) {
+            preprocessed = preprocessor::ReplaceMacros(preprocessed);
+            if (preprocessed != term_) [[likely]] {
+                std::cout << "Replaced macros: " << std::endl << '\t' << preprocessed << std::endl;
+            }
         }
 
-        parsing::StringTerm string_term_root{std::move(preprocessed_input)};
+        parsing::StringTerm string_term_root{std::move(preprocessed)};
         auto root_term = string_term_root.Parse();
 
         auto free_variables = root_term->GetFreeVariables();
@@ -128,9 +134,13 @@ int CLI::Run() {
             }
             LOG(INFO) << sstream.str();
 
+            auto old_string = root_term->ToString();
             root_term->ReplaceBoundVariables(free_variables);
+            auto new_string = root_term->ToString();
 
-            std::cout << "-Alpha-> " << root_term->ToString() << std::endl;
+            if (new_string != old_string) {
+                std::cout << "-Alpha-> " << new_string << std::endl;
+            }
         }
 
         reducer::Reducer reducer{std::move(root_term), strategy_};

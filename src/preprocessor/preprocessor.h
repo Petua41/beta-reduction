@@ -4,62 +4,25 @@
 #include <string>
 #include <vector>
 
-#include "exceptions/invalid_brackets_error.h"
-#include "model/enums/brackets_problems.h"
 #include "preprocessor/i_macro.h"
+#include "preprocessor/macros/church_numeral.h"
+#include "preprocessor/macros/fixed_strings.h"
 
 namespace preprocessor {
 
-class Preprocessor {
-private:
-    static std::vector<std::shared_ptr<IMacro>> const all_macros_;
+static std::vector<std::shared_ptr<IMacro>> const kAllMacros{
+        std::make_shared<terms::FixpointCombinator>(),
+        std::make_shared<terms::True>(),
+        std::make_shared<terms::False>(),
+        std::make_shared<terms::ChuchNumeral>(),
+        std::make_shared<terms::Not>(),
+        std::make_shared<terms::IsZero>(),
+        std::make_shared<terms::Plus>(),
+        std::make_shared<terms::Mult>(),
+        std::make_shared<terms::And>(),
+        std::make_shared<terms::Or>()};
 
-    std::string input_;
-
-    // Actions to perform:
-    bool const check_brackets_;
-    bool const replace_macros_;
-
-    /// @brief Checks brackets and adds missing
-    /// @throw InvalidBracketsError -- if there's some problem with brackets, that cannot be solved
-    void CheckBrackets() {
-        CheckBracketsMatch();
-        CheckOutermostBrackets();
-        CheckAbstractionRhs();
-    }
-
-    /// @brief Checks that brackets match (every opening bracket has corresponding closing bracket
-    /// and vice versa)
-    /// @throw InvalidBracketsError -- if brackets don't match
-    void CheckBracketsMatch();
-
-    /// @brief Replaces marcos with corresponding terms
-    void ReplaceMacros() noexcept;
-
-    /// @brief Checks that the whole term is enclosed with brackets
-    /// (if it's not a single Variable or macro)
-    void CheckOutermostBrackets() noexcept;
-
-    /// @brief Checks that every Abstraction's rhs is enclosed with brackets
-    /// (if it's not a single Variable or macro).
-    /// Abstraction is greedy, i. e. it "takes all that it can reach"
-    void CheckAbstractionRhs() noexcept;
-
-public:
-    Preprocessor(std::string const& input, bool check_brackets = true, bool replace_macros = true)
-        : input_(input), check_brackets_(check_brackets), replace_macros_(replace_macros) {}
-
-    /// @throw InvalidBracketsError -- if there's some problem with brackets, that cannot be solved
-    [[nodiscard]] std::string Preprocess() {
-        if (check_brackets_) {
-            CheckBrackets();
-        }
-        if (replace_macros_) {
-            ReplaceMacros();
-        }
-
-        return input_;
-    }
-};
+[[nodiscard]] std::string CheckBrackets(std::string input);
+[[nodiscard]] std::string ReplaceMacros(std::string input) noexcept;
 
 }  // namespace preprocessor

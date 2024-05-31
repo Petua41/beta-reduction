@@ -7,8 +7,6 @@
 
 namespace test {
 
-using namespace preprocessor;
-
 struct PreprocessorTestParams {
     std::string input_;
     std::string sample_result_;
@@ -32,8 +30,13 @@ TEST_P(TestPreprocessor, DefaultTests) {
     auto const check_brackets = p.check_brackets_;
     auto const replace_macros = p.replace_macros_;
 
-    Preprocessor prep{input, check_brackets, replace_macros};
-    auto actual_result = prep.Preprocess();
+    std::string actual_result{input};
+    if (check_brackets) {
+        actual_result = preprocessor::CheckBrackets(actual_result);
+    }
+    if (replace_macros) {
+        actual_result = preprocessor::ReplaceMacros(actual_result);
+    }
 
     EXPECT_EQ(actual_result, sample_result);
 }
@@ -44,9 +47,8 @@ TEST_P(TestPreprocessorException, ExceptionTests) {
     auto const& p = GetParam();
     auto input = p.input_;
 
-    Preprocessor prep{std::move(input), true, false};
-
-    EXPECT_THROW(auto discard = prep.Preprocess(), exceptions::InvalidBracketsError);
+    EXPECT_THROW(auto discard = preprocessor::CheckBrackets(input),
+                 exceptions::InvalidBracketsError);
 }
 
 // clang-format off
