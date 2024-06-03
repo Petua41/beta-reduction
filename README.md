@@ -44,6 +44,7 @@ Currently supported macros:
 
 ### To compile interpreter, run  
 `git clone https://github.com/Petua41/beta-reduction` \
+`git submodule update --init --recursive` \
 `cd beta-reduction` \
 `mkdir build && cd build` \
 `cmake .. && make -jN`, where N is number of simultaneous jobs
